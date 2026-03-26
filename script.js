@@ -1,3 +1,64 @@
+const infoPorPerfil = {
+	Leticinha: {
+		titulo: 'Suits',
+		meta: '2011 • 9 temporadas • 14+',
+		descricao: 'Um advogado brilhante abandona a faculdade, mas consegue um emprego em um grande escritório de advocacia, mesmo sem diploma.',
+		elenco: 'Gabriel Macht, Patrick J. Adams, Meghan Markle',
+		generos: 'Drama, Jurídico'
+	},
+	Pedro: {
+		titulo: 'Chicago PD',
+		meta: '2014 • 10 temporadas • 16+',
+		descricao: 'Uma equipe de policiais enfrenta crimes perigosos nas ruas de Chicago, lidando com corrupção e violência.',
+		elenco: 'Jason Beghe, Jesse Lee Soffer',
+		generos: 'Ação, Crime, Drama'
+	},
+	Maria: {
+		titulo: 'Toy Story 3',
+		meta: '2010 • 1h 43min • Livre',
+		descricao: 'Woody, Buzz e seus amigos enfrentam novos desafios quando são levados para uma creche enquanto Andy cresce.',
+		elenco: '',
+		generos: 'Animação, Aventura, Infantil'
+	},
+	Evellyn: {
+		titulo: 'To Your Eternity',
+		meta: '2021 • 2 temporadas • 16+',
+		descricao: 'Um ser imortal é enviado à Terra e aprende sobre a vida, morte e emoções humanas ao longo do tempo.',
+		elenco: '',
+		generos: 'Anime, Drama, Fantasia'
+	}
+};
+
+function mostrarInfo() {
+	const perfil = localStorage.getItem('perfil');
+	const info = document.getElementById('info-filme');
+
+	if (!info) {
+		return;
+	}
+
+	const perfilAtivo = infoPorPerfil[perfil] ? perfil : 'Leticinha';
+	const conteudo = infoPorPerfil[perfilAtivo];
+	const elencoLinha = conteudo.elenco ? `<p><strong>Elenco:</strong> ${conteudo.elenco}</p>` : '';
+
+	info.innerHTML = `
+		<div class="info-grid">
+			<div class="info-main">
+				<h2>${conteudo.titulo}</h2>
+				<p class="info-meta">${conteudo.meta}</p>
+				<p class="info-description">${conteudo.descricao}</p>
+			</div>
+			<div class="info-side">
+				${elencoLinha}
+				<p><strong>Gêneros:</strong> ${conteudo.generos}</p>
+			</div>
+		</div>
+	`;
+
+	info.classList.add('is-visible');
+	info.setAttribute('aria-hidden', 'false');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	const profileLinks = document.querySelectorAll('.profile-link');
 	const menuToggle = document.querySelector('.menu-toggle');
@@ -10,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const sairBtn = document.getElementById('sair');
 	const trocarPerfilLink = document.getElementById('trocar-perfil');
 	const assistirAgoraBtn = document.getElementById('assistir-agora');
+	const maisInformacoesBtn = document.getElementById('mais-informacoes');
+	const infoFilme = document.getElementById('info-filme');
 	const catalogBody = document.body;
 
 	const dados = {
@@ -135,6 +198,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!openedWindow) {
 					window.location.assign(linkAssistir);
 				}
+			});
+		}
+
+		if (maisInformacoesBtn && infoFilme) {
+			maisInformacoesBtn.addEventListener('click', (event) => {
+				event.preventDefault();
+				mostrarInfo();
+				maisInformacoesBtn.setAttribute('aria-expanded', 'true');
+				infoFilme.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 			});
 		}
 

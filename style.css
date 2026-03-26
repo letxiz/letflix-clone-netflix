@@ -447,6 +447,71 @@ button {
 	transform: translateY(-2px);
 }
 
+.info-panel {
+	width: min(100%, 860px);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	border-radius: 1rem;
+	background: #141414;
+	padding: 1.25rem;
+	opacity: 0;
+	transform: translateY(14px);
+	pointer-events: none;
+	max-height: 0;
+	overflow: hidden;
+	transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, padding 0.35s ease;
+}
+
+.info-panel.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+	max-height: 640px;
+}
+
+.info-grid {
+	display: grid;
+	grid-template-columns: 1.5fr 1fr;
+	gap: 1.25rem;
+	align-items: start;
+}
+
+.info-main {
+	display: grid;
+	gap: 0.8rem;
+}
+
+.info-main h2 {
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	line-height: 1.1;
+}
+
+.info-meta {
+	color: #d7d7d7;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.info-description {
+	color: #ececec;
+	line-height: 1.65;
+}
+
+.info-side {
+	display: grid;
+	gap: 0.7rem;
+	padding: 0.95rem;
+	border-radius: 0.8rem;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	line-height: 1.5;
+	color: #f1f1f1;
+}
+
+.info-side strong {
+	color: #ffffff;
+	font-weight: 700;
+}
+
 /* Fileiras horizontais do catalogo */
 .catalog-section {
 	padding: 0 1rem 2.5rem;
@@ -548,6 +613,10 @@ button {
 	.movie-row {
 		grid-auto-columns: minmax(180px, 24vw);
 	}
+
+	.info-panel {
+		padding: 1.4rem;
+	}
 }
 
 /* Ajustes para desktop */
@@ -563,5 +632,15 @@ button {
 	.movie-row {
 		grid-auto-columns: minmax(200px, 16vw);
 		gap: 1.25rem;
+	}
+}
+
+@media (max-width: 767px) {
+	.info-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.info-panel {
+		max-width: 100%;
 	}
 }
