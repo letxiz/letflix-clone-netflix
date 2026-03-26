@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LETFLIX | Catálogo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="catalog-page">
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="header-left">
+                <a class="brand" href="index.html" aria-label="Ir para a tela inicial">LETFLIX</a>
+            </div>
+
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+                Menu
+            </button>
+
+            <nav id="site-nav" class="site-nav" aria-label="Navegação principal">
+                <a href="#inicio">Início</a>
+                <a href="#filmes">Filmes</a>
+                <a href="#series">Séries</a>
+                <a href="#minha-lista">Minha Lista</a>
+            </nav>
+
+            <div class="perfil-header" id="perfil-header">
+                <button class="perfil-trigger" id="perfil-trigger" type="button" aria-label="Abrir menu do perfil" aria-expanded="false" aria-controls="perfil-dropdown">
+                    <img id="img-perfil" src="assets/capa1.avif" alt="Perfil">
+                    <span class="perfil-seta" aria-hidden="true">▼</span>
+                </button>
+
+                <div class="perfil-dropdown" id="perfil-dropdown" role="menu" aria-hidden="true">
+                    <p class="perfil-atual" id="perfil-atual">Perfil atual</p>
+                    <a href="index.html" class="perfil-item" id="trocar-perfil" role="menuitem">Trocar perfil</a>
+                    <button type="button" class="perfil-item" id="gerenciar-perfis" role="menuitem">Gerenciar perfis</button>
+                    <button type="button" class="perfil-item" id="sair" role="menuitem">Sair</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero" aria-labelledby="hero-title">
+            <div class="hero__overlay"></div>
+            <div class="hero__content">
+                <p class="hero__eyebrow">Original LETFLIX • <span id="hero-profile">Leticinha</span></p>
+                <h1 id="hero-title">Horizonte Vermelho</h1>
+                <p class="hero__description">
+                    Uma equipe improvável precisa atravessar uma cidade dominada por segredos,
+                    apagões e conspirações para impedir o colapso total do sistema.
+                </p>
+                <div class="hero__actions">
+                    <a class="primary-button" href="#series">Assistir agora</a>
+                    <a class="secondary-button" href="#filmes">Mais informações</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-filmes" class="catalog-section" aria-labelledby="movies-title">
+            <div class="section-heading">
+                <h2 id="movies-title">Filmes para você</h2>
+            </div>
+            <div class="filmes movie-row" id="filmes" aria-label="Lista de filmes para você"></div>
+        </section>
+
+        <section id="sec-series" class="catalog-section" aria-labelledby="series-title">
+            <div class="section-heading">
+                <h2 id="series-title">Em alta</h2>
+            </div>
+            <div class="filmes movie-row" id="series" aria-label="Lista de séries em alta"></div>
+        </section>
+
+        <section id="minha-lista" class="catalog-section" aria-labelledby="list-title">
+            <div class="section-heading">
+                <h2 id="list-title">Minha Lista</h2>
+            </div>
+            <div class="filmes movie-row" id="lista" aria-label="Lista pessoal do usuário"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
