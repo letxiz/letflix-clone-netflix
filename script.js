@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const gerenciarPerfisBtn = document.getElementById('gerenciar-perfis');
 	const sairBtn = document.getElementById('sair');
 	const trocarPerfilLink = document.getElementById('trocar-perfil');
+	const assistirAgoraBtn = document.getElementById('assistir-agora');
 	const catalogBody = document.body;
 
 	const dados = {
@@ -68,6 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		Evellyn: 'capa4.avif'
 	};
 
+	const linkAssistirPorPerfil = {
+		Leticinha: 'https://www.netflix.com/br/title/70195800',
+		Pedro: 'https://www.primevideo.com/-/pt/detail/Chicago-PD/0LKRVK7S4XSF5OP4ZQW6F4OKY5',
+		Maria: 'https://www.disneyplus.com/pt-br/browse/entity-95e7b2ce-5f45-4923-976d-b7e9968a7357',
+		Evellyn: 'https://www.crunchyroll.com/pt-br/series/GG5H5XMWV/to-your-eternity'
+	};
+
 	// Salva o perfil escolhido com a chave esperada para o catalogo dinâmico.
 	profileLinks.forEach((link) => {
 		link.addEventListener('click', (event) => {
@@ -88,34 +96,51 @@ document.addEventListener('DOMContentLoaded', () => {
 	const listaContainer = document.getElementById('lista');
 
 	if (filmesContainer && seriesContainer && listaContainer) {
-		const perfilSalvo = localStorage.getItem('perfil');
-		const perfil = dados[perfilSalvo] ? perfilSalvo : 'Leticinha';
+		const perfil = localStorage.getItem('perfil');
+		const perfilAtivo = dados[perfil] ? perfil : 'Leticinha';
+		const linkAssistir = linkAssistirPorPerfil[perfilAtivo] || linkAssistirPorPerfil.Leticinha;
 
 		const heroProfile = document.getElementById('hero-profile');
 		const hero = document.getElementById('inicio');
 
 		if (heroProfile) {
-			heroProfile.textContent = perfil;
+			heroProfile.textContent = perfilAtivo;
 		}
 
 		if (profileImage) {
-			const avatar = avatarPorPerfil[perfil] || 'capa1.avif';
+			const avatar = avatarPorPerfil[perfilAtivo] || 'capa1.avif';
 			profileImage.src = `assets/${avatar}`;
-			profileImage.alt = `Perfil ${perfil}`;
+			profileImage.alt = `Perfil ${perfilAtivo}`;
 		}
 
 		if (perfilAtual) {
-			perfilAtual.textContent = perfil;
+			perfilAtual.textContent = perfilAtivo;
 		}
 
 		if (hero) {
-			const banner = bannerPorPerfil[perfil] || `${perfil}.jpg`;
+			const banner = bannerPorPerfil[perfilAtivo] || `${perfilAtivo}.jpg`;
 			hero.style.backgroundImage = `url("${encodeURI(`assets/banner/${banner}`)}")`;
 		}
 
-		renderFilmes(filmesContainer, perfil, dados[perfil].filmes, 'filmes');
-		renderFilmes(seriesContainer, perfil, dados[perfil].series, 'series');
-		renderLista(listaContainer, perfil, dados[perfil].lista);
+		if (assistirAgoraBtn) {
+			assistirAgoraBtn.href = linkAssistir;
+			assistirAgoraBtn.target = '_blank';
+			assistirAgoraBtn.rel = 'noopener noreferrer';
+
+			assistirAgoraBtn.addEventListener('click', (event) => {
+				event.preventDefault();
+
+				const openedWindow = window.open(linkAssistir, '_blank', 'noopener,noreferrer');
+
+				if (!openedWindow) {
+					window.location.assign(linkAssistir);
+				}
+			});
+		}
+
+		renderFilmes(filmesContainer, perfilAtivo, dados[perfilAtivo].filmes, 'filmes');
+		renderFilmes(seriesContainer, perfilAtivo, dados[perfilAtivo].series, 'series');
+		renderLista(listaContainer, perfilAtivo, dados[perfilAtivo].lista);
 	}
 
 	// Controla o menu mobile do catalogo.
