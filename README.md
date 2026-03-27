@@ -73,7 +73,7 @@ O LETFLIX integra a **The Movie Database (TMDB) API** para busca dinâmica de fi
 └── catalogo.css
 
 ```
-## � Futuras Atualizações
+## Futuras Atualizações
 
 O projeto está em evolução! Algumas melhorias planejadas incluem:
 
@@ -86,7 +86,7 @@ O projeto está em evolução! Algumas melhorias planejadas incluem:
 
 ---
 
-## � Desafios e Evolução
+## Desafios e Evolução
 
 Este projeto foi uma jornada de aprendizado contínuo. Enfrentei desafios significativos, especialmente com:
 
