@@ -1,0 +1,3 @@
+export const APP_CONFIG = {
+	TMDB_API_KEY: 'COLOQUE_SUA_TMDB_API_KEY_AQUI',
+};
