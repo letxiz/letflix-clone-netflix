@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LETFLIX | Busca</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="css/busca.css">
+</head>
+<body class="catalog-page search-page">
+	<header class="site-header">
+		<div class="site-header__inner">
+			<div class="header-left">
+				<a class="brand" href="catalogo.html" aria-label="Ir para a tela inicial">LETFLIX</a>
+			</div>
+
+			<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+				Menu
+			</button>
+
+			<nav id="site-nav" class="site-nav" aria-label="Navegação principal">
+				<a href="catalogo.html">Início</a>
+				<a href="catalogo.html#filmes">Filmes</a>
+				<a href="catalogo.html#series">Séries</a>
+				<a href="catalogo.html#minha-lista">Minha Lista</a>
+			</nav>
+
+			<div class="header-right">
+				<div class="header-search header-search--open">
+					<button class="header-search__icon" id="buscar-acao" type="button" aria-label="Buscar">⌕</button>
+					<input id="busca-tmdb" type="search" placeholder="Títulos e gêneros" aria-label="Buscar títulos e gêneros">
+				</div>
+
+				<div class="perfil-header" id="perfil-header">
+					<button class="perfil-trigger" id="perfil-trigger" type="button" aria-label="Abrir menu do perfil" aria-expanded="false" aria-controls="perfil-dropdown">
+						<img id="img-perfil" src="assets/capa1.avif" alt="Perfil">
+						<span class="perfil-seta" aria-hidden="true">▼</span>
+					</button>
+
+					<div class="perfil-dropdown" id="perfil-dropdown" role="menu" aria-hidden="true">
+						<p class="perfil-atual" id="perfil-atual">Perfil atual</p>
+						<a href="perfis.html" class="perfil-item" id="trocar-perfil" role="menuitem">Trocar perfil</a>
+						<button type="button" class="perfil-item" id="editar-perfil" role="menuitem">Editar perfil</button>
+						<button type="button" class="perfil-item" id="sair" role="menuitem">Sair</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main class="search-page-main">
+		<section class="catalog-section search-page-section" aria-labelledby="busca-title">
+			<div class="section-heading">
+				<h2 id="busca-title">Resultados da busca</h2>
+			</div>
+			<p class="search-query" id="busca-query-text"></p>
+			<div class="search-grid" id="resultados-busca-grid" aria-live="polite"></div>
+		</section>
+	</main>
+
+	<!-- Modal para editar preferências do perfil -->
+	<div class="edit-preferences-modal" id="edit-preferences-modal">
+		<div class="modal-content">
+			<h2>Editar Preferências</h2>
+			<p class="modal-subtitle">Escolha os gêneros que você curte (opcional)</p>
+
+			<div class="genres-grid" id="edit-genres-grid">
+				<button class="genre-chip" type="button" data-genre="acao">Ação</button>
+				<button class="genre-chip" type="button" data-genre="comedia">Comédia</button>
+				<button class="genre-chip" type="button" data-genre="terror">Terror</button>
+				<button class="genre-chip" type="button" data-genre="anime">Anime</button>
+				<button class="genre-chip" type="button" data-genre="romance">Romance</button>
+			</div>
+
+			<div class="modal-buttons">
+				<button class="modal-btn-cancel" id="pref-cancel-btn" type="button">Cancelar</button>
+				<button class="modal-btn-confirm" id="pref-save-btn" type="button">Salvar Preferências</button>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="module" src="js/paginas/busca.js"></script>
+</body>
+</html>
