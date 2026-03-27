@@ -1,0 +1,253 @@
+/* =========================================
+   Estilos da página de busca
+   ========================================= */
+
+/* Carrossel de resultados */
+.search-results-carousel {
+	position: relative;
+}
+
+.carousel-arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 34px;
+	height: 54px;
+	border: none;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.5);
+	color: #ffffff;
+	font-size: 1rem;
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease, background-color 0.3s ease;
+	z-index: 3;
+}
+
+.carousel-arrow:hover,
+.carousel-arrow:focus-visible {
+	background: rgba(0, 0, 0, 0.75);
+	outline: none;
+}
+
+.search-results-carousel:hover .carousel-arrow:not([hidden]),
+.search-results-carousel:focus-within .carousel-arrow:not([hidden]) {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.carousel-arrow[hidden] {
+	display: none;
+}
+
+.carousel-arrow--left {
+	left: 0.15rem;
+}
+
+.carousel-arrow--right {
+	right: 0.15rem;
+}
+
+/* Layout da página de busca */
+.search-page-main {
+	padding-top: calc(var(--header-height) + 1.25rem);
+}
+
+.search-page-section {
+	padding-bottom: 2.5rem;
+}
+
+.search-query {
+	padding: 0 clamp(0rem, 3vw, 2rem) 1rem;
+	color: var(--color-text-muted);
+	font-size: 0.95rem;
+}
+
+/* Grid de resultados */
+.search-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 1rem;
+	padding: 0 clamp(0rem, 3vw, 2rem) 0.5rem;
+}
+
+.search-grid .movie-card {
+	max-width: 100%;
+}
+
+/* Barra de busca expandida na página de busca */
+.search-page .header-search {
+	width: 280px;
+}
+
+.search-page .header-search #busca-tmdb,
+.header-search--open #busca-tmdb {
+	opacity: 1;
+}
+
+.search-page .header-search:focus-within {
+	width: 280px;
+}
+
+/* ── Responsividade ───────────────────────── */
+
+@media (min-width: 769px) {
+	.search-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1024px) {
+	.search-grid {
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	}
+}
+
+@media (max-width: 768px) {
+	.search-page .header-search,
+	.search-page .header-search:focus-within {
+		width: min(62vw, 230px);
+	}
+
+	.search-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.85rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.search-page .header-search,
+	.search-page .header-search:focus-within {
+		width: min(64vw, 200px);
+	}
+
+	.search-grid {
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	}
+}
+
+/* =========================================
+   Modal de Editar Preferências
+   ========================================= */
+
+.edit-preferences-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.85);
+	backdrop-filter: blur(4px);
+	z-index: 100;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.edit-preferences-modal.active {
+	display: flex;
+	opacity: 1;
+}
+
+.edit-preferences-modal .modal-content {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: 0.75rem;
+	padding: 2rem;
+	width: 90%;
+	max-width: 400px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+	animation: modal-slide-up 0.3s ease;
+}
+
+.edit-preferences-modal .modal-content h2 {
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
+	color: var(--color-text);
+}
+
+.edit-preferences-modal .modal-subtitle {
+	color: var(--color-text-muted);
+	font-size: 0.9rem;
+	margin-bottom: 1.5rem;
+}
+
+.edit-preferences-modal .genres-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0.75rem;
+	margin-bottom: 1.5rem;
+}
+
+.edit-preferences-modal .genre-chip {
+	padding: 0.75rem 1rem;
+	border: 2px solid var(--color-border);
+	border-radius: 0.5rem;
+	background: transparent;
+	color: var(--color-text);
+	font-weight: 600;
+	cursor: pointer;
+	transition: all var(--transition-default);
+	font-size: 0.95rem;
+}
+
+.edit-preferences-modal .genre-chip:hover {
+	border-color: var(--color-brand);
+	color: var(--color-brand);
+}
+
+.edit-preferences-modal .genre-chip.selected {
+	background: var(--color-brand);
+	border-color: var(--color-brand);
+	color: #ffffff;
+}
+
+.edit-preferences-modal .modal-buttons {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.edit-preferences-modal .modal-btn-cancel,
+.edit-preferences-modal .modal-btn-confirm {
+	flex: 1;
+	padding: 0.85rem 1rem;
+	border: none;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all var(--transition-default);
+	font-size: 0.95rem;
+}
+
+.edit-preferences-modal .modal-btn-cancel {
+	background: transparent;
+	border: 1px solid var(--color-border);
+	color: var(--color-text);
+}
+
+.edit-preferences-modal .modal-btn-cancel:hover {
+	background: var(--color-surface-soft);
+	border-color: var(--color-text-muted);
+}
+
+.edit-preferences-modal .modal-btn-confirm {
+	background: var(--color-brand);
+	color: #ffffff;
+}
+
+.edit-preferences-modal .modal-btn-confirm:hover {
+	opacity: 0.9;
+	transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+	.edit-preferences-modal .modal-content {
+		padding: 1.5rem;
+		width: 95%;
+		max-width: 100%;
+	}
+
+	.edit-preferences-modal .genres-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
