@@ -28,24 +28,24 @@ Cada perfil possui conteúdos diferentes, simulando uma experiência real de str
 
 ## 🛠️ Tecnologias utilizadas
 
-* **HTML5**
-* **CSS3**
-* **JavaScript (ES6+)**
-* **API TMDB** - Para busca de filmes e séries em tempo real
+- **HTML5**
+- **CSS3**
+- **JavaScript (ES6+)**
+- **API TMDB** - Para busca de filmes e séries em tempo real
 
 ---
 
 ## 🔐 Integração com TMDB
 
-O LETFLIX integra a **The Movie Database (TMDB) API** para busca dinâmica de filmes e séries em tempo real. A configuração segue boas práticas de segurança:
+O LETFLIX integra a **The Movie Database (TMDB) API** para busca dinâmica de filmes e séries em tempo real.
 
-- `config.js`: contém a chave real (`TMDB_API_KEY`) e está no `.gitignore`
-- `config.example.js`: arquivo modelo para referência (sem chave sensível)
+Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida diretamente no arquivo principal da busca:
 
-**Como configurar:**
-1. Obtenha uma chave gratuita em [TMDB](https://www.themoviedb.org/settings/api)
-2. Copie `config.example.js` para `config.js`
-3. Substitua `'COLOQUE_SUA_TMDB_API_KEY_AQUI'` pela sua chave real
+- `js/paginas/busca.js`: contém a constante `TMDB_API_KEY`
+- A requisição usa `fetch` diretamente com a URL da API TMDB
+- Há tratamento de erro no carregamento para facilitar debug no navegador
+
+**Observação:** em projetos maiores, o ideal é esconder a chave no backend. Neste projeto front-end estático, a integração direta foi usada para garantir funcionamento no deploy online.
 
 ---
 
@@ -73,6 +73,7 @@ O LETFLIX integra a **The Movie Database (TMDB) API** para busca dinâmica de fi
 └── catalogo.css
 
 ```
+
 ## Futuras Atualizações
 
 O projeto está em evolução! Algumas melhorias planejadas incluem:
@@ -97,7 +98,7 @@ Mas estou **evoluindo constantemente**, melhorando meu código a cada commit e a
 
 ---
 
-## �📚 Aprendizados
+## 📚 Aprendizados
 
 Durante o desenvolvimento deste projeto, foram consolidados importantes conceitos de desenvolvimento front-end, como:
 
