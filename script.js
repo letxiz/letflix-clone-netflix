@@ -29,6 +29,24 @@ const infoPorPerfil = {
 	}
 };
 
+const linkAssistirPorPerfil = {
+	Leticinha: 'https://www.netflix.com/br/title/70195800',
+	Pedro: 'https://www.primevideo.com/-/pt/detail/Chicago-PD/0LKRVK7S4XSF5OP4ZQW6F4OKY5',
+	Maria: 'https://www.disneyplus.com/pt-br/browse/entity-95e7b2ce-5f45-4923-976d-b7e9968a7357',
+	Evellyn: 'https://www.crunchyroll.com/pt-br/series/GG5H5XMWV/to-your-eternity'
+};
+
+function assistir() {
+	const perfil = localStorage.getItem('perfil');
+	const perfilAtivo = linkAssistirPorPerfil[perfil] ? perfil : 'Leticinha';
+	const linkAssistir = linkAssistirPorPerfil[perfilAtivo] || linkAssistirPorPerfil.Leticinha;
+	const openedWindow = window.open(linkAssistir, '_blank', 'noopener,noreferrer');
+
+	if (!openedWindow) {
+		window.location.assign(linkAssistir);
+	}
+}
+
 function mostrarInfo() {
 	const perfil = localStorage.getItem('perfil');
 	const info = document.getElementById('info-filme');
@@ -57,6 +75,13 @@ function mostrarInfo() {
 
 	info.classList.add('is-visible');
 	info.setAttribute('aria-hidden', 'false');
+
+	const maisInformacoesBtn = document.getElementById('mais-informacoes');
+	if (maisInformacoesBtn) {
+		maisInformacoesBtn.setAttribute('aria-expanded', 'true');
+	}
+
+	info.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,9 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const gerenciarPerfisBtn = document.getElementById('gerenciar-perfis');
 	const sairBtn = document.getElementById('sair');
 	const trocarPerfilLink = document.getElementById('trocar-perfil');
-	const assistirAgoraBtn = document.getElementById('assistir-agora');
-	const maisInformacoesBtn = document.getElementById('mais-informacoes');
-	const infoFilme = document.getElementById('info-filme');
 	const catalogBody = document.body;
 
 	const dados = {
@@ -132,13 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		Evellyn: 'capa4.avif'
 	};
 
-	const linkAssistirPorPerfil = {
-		Leticinha: 'https://www.netflix.com/br/title/70195800',
-		Pedro: 'https://www.primevideo.com/-/pt/detail/Chicago-PD/0LKRVK7S4XSF5OP4ZQW6F4OKY5',
-		Maria: 'https://www.disneyplus.com/pt-br/browse/entity-95e7b2ce-5f45-4923-976d-b7e9968a7357',
-		Evellyn: 'https://www.crunchyroll.com/pt-br/series/GG5H5XMWV/to-your-eternity'
-	};
-
 	// Salva o perfil escolhido com a chave esperada para o catalogo dinâmico.
 	profileLinks.forEach((link) => {
 		link.addEventListener('click', (event) => {
@@ -161,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (filmesContainer && seriesContainer && listaContainer) {
 		const perfil = localStorage.getItem('perfil');
 		const perfilAtivo = dados[perfil] ? perfil : 'Leticinha';
-		const linkAssistir = linkAssistirPorPerfil[perfilAtivo] || linkAssistirPorPerfil.Leticinha;
 
 		const heroProfile = document.getElementById('hero-profile');
 		const hero = document.getElementById('inicio');
@@ -183,31 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (hero) {
 			const banner = bannerPorPerfil[perfilAtivo] || `${perfilAtivo}.jpg`;
 			hero.style.backgroundImage = `url("${encodeURI(`assets/banner/${banner}`)}")`;
-		}
-
-		if (assistirAgoraBtn) {
-			assistirAgoraBtn.href = linkAssistir;
-			assistirAgoraBtn.target = '_blank';
-			assistirAgoraBtn.rel = 'noopener noreferrer';
-
-			assistirAgoraBtn.addEventListener('click', (event) => {
-				event.preventDefault();
-
-				const openedWindow = window.open(linkAssistir, '_blank', 'noopener,noreferrer');
-
-				if (!openedWindow) {
-					window.location.assign(linkAssistir);
-				}
-			});
-		}
-
-		if (maisInformacoesBtn && infoFilme) {
-			maisInformacoesBtn.addEventListener('click', (event) => {
-				event.preventDefault();
-				mostrarInfo();
-				maisInformacoesBtn.setAttribute('aria-expanded', 'true');
-				infoFilme.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-			});
 		}
 
 		renderFilmes(filmesContainer, perfilAtivo, dados[perfilAtivo].filmes, 'filmes');

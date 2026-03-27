@@ -29,16 +29,7 @@ body {
 	color: var(--color-text);
 	font-family: 'Montserrat', sans-serif;
 	background: var(--color-black);
-}
 
-img {
-	display: block;
-	max-width: 100%;
-}
-
-a {
-	color: inherit;
-	text-decoration: none;
 }
 
 button {
@@ -52,6 +43,14 @@ button {
 	font-size: clamp(2rem, 4vw, 2.75rem);
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.brand:visited,
+.brand:hover,
+.brand:focus-visible {
+	color: var(--color-brand);
+	text-decoration: none;
 }
 
 /* Tela de perfis */
@@ -254,8 +253,14 @@ button {
 }
 
 .site-nav a {
+	text-decoration: none;
 	color: var(--color-text-muted);
+	font-weight: 500;
 	transition: color var(--transition-default);
+}
+
+.site-nav a:visited {
+	color: var(--color-text-muted);
 }
 
 .site-nav a:hover,
@@ -354,10 +359,16 @@ button {
 	border-radius: 0.45rem;
 	background: transparent;
 	color: var(--color-text);
+	text-decoration: none;
 	font-size: 0.92rem;
 	text-align: left;
 	cursor: pointer;
 	transition: background-color var(--transition-default), color var(--transition-default);
+}
+
+.perfil-item:visited {
+	color: var(--color-text);
+	text-decoration: none;
 }
 
 .perfil-item:hover,
@@ -425,26 +436,45 @@ button {
 	min-width: 180px;
 	padding: 0.95rem 1.4rem;
 	border-radius: 0.45rem;
+	font-family: 'Montserrat', sans-serif;
 	font-weight: 600;
-	transition: transform var(--transition-default), opacity var(--transition-default), background-color var(--transition-default);
+	backdrop-filter: blur(4px);
+	transition: transform var(--transition-default), opacity var(--transition-default), background-color var(--transition-default), box-shadow var(--transition-default), border-color var(--transition-default);
 }
 
 .primary-button {
-	background: var(--color-text);
-	color: var(--color-black);
+	background: #ffffff;
+	color: #000000;
+	border: 1px solid #ffffff;
+	box-shadow: 0 8px 22px rgba(255, 255, 255, 0.22);
 }
 
 .secondary-button {
-	background: rgba(109, 109, 110, 0.75);
+	background: rgba(255, 255, 255, 0.18);
+	color: #ffffff;
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
 }
 
 .primary-button:hover,
 .primary-button:focus-visible,
 .secondary-button:hover,
 .secondary-button:focus-visible {
-	opacity: 0.9;
+	opacity: 1;
 	outline: none;
-	transform: translateY(-2px);
+	transform: translateY(-2px) scale(1.03);
+}
+
+.primary-button:hover,
+.primary-button:focus-visible {
+	box-shadow: 0 12px 30px rgba(255, 255, 255, 0.3);
+}
+
+.secondary-button:hover,
+.secondary-button:focus-visible {
+	background: rgba(255, 255, 255, 0.28);
+	border-color: rgba(255, 255, 255, 0.7);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
 }
 
 .info-panel {
@@ -452,7 +482,7 @@ button {
 	border: 1px solid rgba(255, 255, 255, 0.18);
 	border-radius: 1rem;
 	background: #141414;
-	padding: 1.25rem;
+	padding: 0;
 	opacity: 0;
 	transform: translateY(14px);
 	pointer-events: none;
@@ -466,6 +496,7 @@ button {
 	transform: translateY(0);
 	pointer-events: auto;
 	max-height: 640px;
+	padding: 1.25rem;
 }
 
 .info-grid {
@@ -644,3 +675,5 @@ button {
 		max-width: 100%;
 	}
 }
+
+
