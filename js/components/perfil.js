@@ -4,6 +4,7 @@ const PERFIS_COLLECTION_KEY = 'perfis';
 const PERFIL_PADRAO = 'Leticinha';
 const MAX_PERFIS = 5;
 const BANNER_PADRAO = 'assets/background/banner1.jpg';
+const PERFIS_REMOVIDOS = new Set(['Pedro']);
 const AVATARES_DISPONIVEIS = [
 	'assets/avatars/avatar1.jpg',
 	'assets/avatars/avatar2.jpg',
@@ -65,6 +66,10 @@ function normalizarPerfil(perfil) {
 			? perfilComAvatar.banner
 			: BANNER_PADRAO,
 	};
+}
+
+function perfilFoiRemovido(nome) {
+	return PERFIS_REMOVIDOS.has(nome);
 }
 
 function obterPerfilPadrao() {
@@ -167,7 +172,14 @@ export function obterPerfil(perfisDisponiveis = []) {
 }
 
 export function obterPerfilAtivo() {
-	return obterPerfilPersistido();
+	const perfil = obterPerfilPersistido();
+
+	if (perfil && perfilFoiRemovido(perfil.nome)) {
+		limparPerfil();
+		return null;
+	}
+
+	return perfil;
 }
 
 export function garantirPerfilAtivo(redirectUrl = 'perfis.html') {
@@ -207,10 +219,17 @@ export function obterPerfisCollection() {
 			return [];
 		}
 
-		const perfisNormalizados = perfisLidos.map(normalizarPerfil);
+		const perfisNormalizados = perfisLidos
+			.map(normalizarPerfil)
+			.filter((perfil) => perfil && !perfilFoiRemovido(perfil.nome));
 
 		if (JSON.stringify(perfisLidos) !== JSON.stringify(perfisNormalizados)) {
 			salvarPerfisCollection(perfisNormalizados);
+
+			const perfilAtivo = obterPerfilPersistido();
+			if (perfilAtivo && perfilFoiRemovido(perfilAtivo.nome)) {
+				limparPerfil();
+			}
 		}
 
 		return perfisNormalizados;

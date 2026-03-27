@@ -1,5 +1,5 @@
 import { iniciarDropdown } from '../components/dropdown.js';
-import { adicionarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfilAtivo } from '../components/minha-lista.js';
+import { alternarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfilAtivo } from '../components/minha-lista.js';
 import { garantirPerfilAtivo, obterPerfil, limparPerfil, atualizarPreferencias } from '../components/perfil.js';
 import { filmes } from '../data/filmes.js';
 import { renderizarResultadosExternos } from '../components/cards.js';
@@ -29,7 +29,10 @@ function atualizarBotoesMinhaLista() {
 		const item = obterItemDoCard(botao.closest('.movie-card'));
 		const estaNaLista = item ? idsSalvos.has(obterIdentificadorMinhaLista(item)) : false;
 		botao.classList.toggle('is-added', estaNaLista);
-		botao.textContent = estaNaLista ? '✓' : '+';
+		botao.textContent = estaNaLista ? '−' : '+';
+		botao.setAttribute('aria-label', estaNaLista
+			? `Remover ${item?.titulo || 'item'} da Minha Lista`
+			: `Adicionar ${item?.titulo || 'item'} à Minha Lista`);
 	});
 }
 
@@ -48,7 +51,7 @@ function iniciarMinhaListaBusca() {
 			return;
 		}
 
-		adicionarMinhaLista(item);
+		alternarMinhaLista(item);
 		atualizarBotoesMinhaLista();
 	});
 }
@@ -176,6 +179,8 @@ function configurarNavegacaoBusca(searchInput, searchButton) {
 		return;
 	}
 
+	const searchContainer = searchInput.closest('.header-search');
+
 	const redirecionarBusca = () => {
 		const termo = searchInput.value.trim();
 		if (!termo) {
@@ -195,6 +200,24 @@ function configurarNavegacaoBusca(searchInput, searchButton) {
 	});
 
 	searchButton.addEventListener('click', redirecionarBusca);
+
+	const fecharBuscaAoInteragirFora = (event) => {
+		if (!searchContainer) {
+			return;
+		}
+
+		const alvo = event.target;
+		if (searchContainer.contains(alvo)) {
+			return;
+		}
+
+		if (document.activeElement === searchInput) {
+			searchInput.blur();
+		}
+	};
+
+	document.addEventListener('touchstart', fecharBuscaAoInteragirFora, { passive: true });
+	document.addEventListener('touchmove', fecharBuscaAoInteragirFora, { passive: true });
 }
 
 async function carregarResultadosBusca(searchInput, queryText, resultsGrid) {

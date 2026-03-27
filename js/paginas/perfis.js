@@ -2,7 +2,6 @@ import {
 	obterPerfilAtivo,
 	salvarPerfil,
 	obterPerfisCollection,
-	salvarPerfisCollection,
 	adicionarPerfil,
 	deletarPerfil,
 	obterPerfilPorNome,
@@ -13,6 +12,45 @@ import {
 let emModoGerenciamento = false;
 let avatarSelecionado = null;
 let nomePerfilPendente = null;
+const mediaQueryMobile = window.matchMedia('(max-width: 768px)');
+const LIMITE_AVATARES_MOBILE = 4;
+
+const GENERO_LABELS = {
+	acao: 'Ação',
+	comedia: 'Comédia',
+	terror: 'Terror',
+	anime: 'Anime',
+	romance: 'Romance',
+};
+
+const PERFIL_DESCRICOES = {
+	Leticinha: 'Filmes e séries',
+	Maria: 'Perfil infantil',
+	Evellyn: 'Animes e fantasia',
+};
+
+function escaparHtml(valor) {
+	return String(valor ?? '')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function obterItensResumoPerfil(perfil) {
+	const preferencias = Array.isArray(perfil.preferencias) ? perfil.preferencias : [];
+	const generos = preferencias
+		.map((genero) => GENERO_LABELS[genero] || genero)
+		.filter(Boolean)
+		.slice(0, 2);
+
+	if (generos.length > 0) {
+		return generos;
+	}
+
+	return [PERFIL_DESCRICOES[perfil.nome] || 'Filmes e séries'];
+}
 
 function renderizarPerfis() {
 	const perfis = obterPerfisCollection();
@@ -27,16 +65,23 @@ function renderizarPerfis() {
 		const li = document.createElement('li');
 		li.className = 'profile-item';
 		li.style.animationDelay = `${indice * 0.08}s`;
+		const resumoPerfil = obterItensResumoPerfil(perfil)
+			.map((item) => `<li>${escaparHtml(item)}</li>`)
+			.join('');
 		
 		const figura = document.createElement('figure');
 		figura.innerHTML = `
-			<img src="${perfil.avatar}" alt="Perfil ${perfil.nome}" loading="lazy" />
-			<figcaption>${perfil.nome}</figcaption>
+			<img src="${perfil.avatar}" alt="Perfil ${escaparHtml(perfil.nome)}" loading="lazy" />
+			<div class="profile-copy">
+				<figcaption class="profile-name">${escaparHtml(perfil.nome)}</figcaption>
+				<ul class="profile-meta" aria-label="Resumo do perfil ${escaparHtml(perfil.nome)}">${resumoPerfil}</ul>
+			</div>
 		`;
 		
 		const link = document.createElement('a');
 		link.href = 'catalogo.html';
 		link.className = 'profile-link';
+		link.setAttribute('aria-label', `Entrar no perfil ${perfil.nome}`);
 		link.appendChild(figura);
 		
 		// Botão de deletar
@@ -60,11 +105,44 @@ function renderizarPerfis() {
 				return;
 			}
 			e.preventDefault();
+			li.classList.add('is-selected');
 			entrarPerfil(perfil.nome, 'catalogo.html');
 		});
 		
 		grid.appendChild(li);
 	});
+
+	posicionarBotaoAdicionar();
+}
+
+function posicionarBotaoAdicionar() {
+	const addBtn = document.getElementById('open-add-profile-btn');
+	const grid = document.getElementById('profiles-grid');
+	const actions = document.querySelector('.profiles-actions');
+	const addAction = document.getElementById('profiles-add-action');
+
+	if (!addBtn || !grid || !actions || !addAction) {
+		return;
+	}
+
+	const itemExistente = grid.querySelector('.add-profile-entry');
+
+	if (mediaQueryMobile.matches) {
+		const itemAdicionar = itemExistente || document.createElement('li');
+		itemAdicionar.className = 'profile-item add-profile-entry';
+		itemAdicionar.appendChild(addBtn);
+
+		if (!itemExistente) {
+			grid.appendChild(itemAdicionar);
+		}
+		return;
+	}
+
+	if (itemExistente) {
+		itemExistente.remove();
+	}
+
+	addAction.appendChild(addBtn);
 }
 
 function entrarPerfil(nome, destino) {
@@ -75,14 +153,29 @@ function entrarPerfil(nome, destino) {
 		window.location.href = destino;
 	}, 400);
 }
+
+function obterAvataresDisponiveis() {
+	if (mediaQueryMobile.matches) {
+		return AVATARES_DISPONIVEIS.slice(0, LIMITE_AVATARES_MOBILE);
+	}
+
+	return AVATARES_DISPONIVEIS;
+}
+
 function renderizarAvatarGrid() {
 	const avatarGrid = document.getElementById('avatar-grid');
 	
 	if (!avatarGrid) return;
 	
 	avatarGrid.innerHTML = '';
+
+	const avataresDisponiveis = obterAvataresDisponiveis();
+
+	if (avatarSelecionado && !avataresDisponiveis.includes(avatarSelecionado)) {
+		avatarSelecionado = null;
+	}
 	
-	AVATARES_DISPONIVEIS.forEach((avatar) => {
+	avataresDisponiveis.forEach((avatar) => {
 		const div = document.createElement('div');
 		div.className = 'avatar-option';
 		if (avatarSelecionado === avatar) {
@@ -231,44 +324,64 @@ function confirmarDelecao(nome) {
 	}
 }
 
-function alternarModoGerenciamento() {
-	emModoGerenciamento = !emModoGerenciamento;
-	
+function aplicarModoGerenciamento(ativo) {
+	emModoGerenciamento = ativo;
+
 	const body = document.body;
-	const btn = document.getElementById('toggle-manage-btn');
+	const titulo = document.getElementById('profiles-title');
+	const helperText = document.getElementById('profiles-helper-text');
 	
 	if (emModoGerenciamento) {
 		body.classList.add('manage-mode');
-		btn.classList.add('active');
-		btn.textContent = 'Concluído';
+		if (titulo) {
+			titulo.textContent = 'Gerenciar perfis';
+		}
+		if (helperText) {
+			helperText.hidden = false;
+		}
 	} else {
 		body.classList.remove('manage-mode');
-		btn.classList.remove('active');
-		btn.textContent = 'Gerenciar perfis';
+		if (titulo) {
+			titulo.textContent = 'Escolha um perfil';
+		}
+		if (helperText) {
+			helperText.hidden = true;
+		}
 	}
 }
 
 function iniciarPaginaPerfis() {
+	const params = new URLSearchParams(window.location.search);
+	const abriuModoGerenciamento = params.get('modo') === 'gerenciar';
+
 	// Se houver perfil ativo, redirecionar
 	const perfilAtivo = obterPerfilAtivo();
-	if (perfilAtivo) {
+	if (perfilAtivo && !abriuModoGerenciamento) {
 		window.location.href = 'catalogo.html';
 		return;
 	}
 	
 	// Renderizar perfis
 	renderizarPerfis();
-	
-	// Botão de gerenciar
-	const manageBtn = document.getElementById('toggle-manage-btn');
-	if (manageBtn) {
-		manageBtn.addEventListener('click', alternarModoGerenciamento);
+
+	if (abriuModoGerenciamento) {
+		aplicarModoGerenciamento(true);
 	}
 
 	const addBtn = document.getElementById('open-add-profile-btn');
 	if (addBtn) {
 		addBtn.addEventListener('click', abrirModalAdicionarPerfil);
 	}
+
+	posicionarBotaoAdicionar();
+	mediaQueryMobile.addEventListener('change', () => {
+		posicionarBotaoAdicionar();
+
+		const modalAdicionar = document.getElementById('add-profile-modal');
+		if (modalAdicionar?.classList.contains('active')) {
+			renderizarAvatarGrid();
+		}
+	});
 	
 	// Modal eventos
 	const modal = document.getElementById('add-profile-modal');

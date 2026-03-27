@@ -1,12 +1,12 @@
 export const filmes = {
-	Leticinha: ['HarryPotter1.jpg', 'HarryPotter2.jpg', 'HarryPotter3.jpg', 'Para Todos os Garotos.jpg', 'Questao de Tempo.jpg'],
+	Leticinha: ['Harry Potter 1.jpg', 'Harry Potter 2.jpg', 'Harry Potter 3.jpg', 'Para Todos os Garotos.jpg', 'Questao de Tempo.jpg'],
 	Maria: ['carrosel.jpg', 'Galinha Pintadinha.jpg', 'Guerreiras do Kpop.jpg', 'Marsha & Urso.jpg', 'Patrulha Canina.jpg'],
 	Evellyn: ['Attack on Titan.avf']
 };
 
 export const minhaLista = {
 	Leticinha: [
-		{ tipo: 'filmes', arquivo: 'HarryPotter2.jpg' },
+		{ tipo: 'filmes', arquivo: 'Harry Potter 2.jpg' },
 		{ tipo: 'series', arquivo: 'TheVampireDiaries.jpg' },
 		{ tipo: 'filmes', arquivo: 'Para Todos os Garotos.jpg' },
 		{ tipo: 'series', arquivo: 'The Originals.avf' }

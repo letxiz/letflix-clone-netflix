@@ -1,6 +1,6 @@
 import { renderizarCards, renderizarCardsLocais, renderizarLista } from '../components/cards.js';
 import { iniciarDropdown } from '../components/dropdown.js';
-import { adicionarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfilAtivo } from '../components/minha-lista.js';
+import { alternarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfilAtivo } from '../components/minha-lista.js';
 import { garantirPerfilAtivo, obterPerfil, limparPerfil, obterPerfilPorNome, atualizarPreferencias } from '../components/perfil.js';
 import { generosLocais } from '../data/generos.js';
 import { filmes, minhaLista } from '../data/filmes.js';
@@ -152,9 +152,9 @@ function atualizarBotoesMinhaLista(itensIniciais = []) {
 		const item = obterItemDoCard(botao.closest('.movie-card'));
 		const estaNaLista = item ? idsSalvos.has(obterIdentificadorMinhaLista(item)) : false;
 		botao.classList.toggle('is-added', estaNaLista);
-		botao.textContent = estaNaLista ? '✓' : '+';
+		botao.textContent = estaNaLista ? '−' : '+';
 		botao.setAttribute('aria-label', estaNaLista
-			? `Adicionado à Minha Lista: ${item?.titulo || 'item'}`
+			? `Remover ${item?.titulo || 'item'} da Minha Lista`
 			: `Adicionar ${item?.titulo || 'item'} à Minha Lista`);
 	});
 }
@@ -188,7 +188,7 @@ function iniciarMinhaLista(listaContainer, nomePerfilAtivo) {
 			return;
 		}
 
-		const resultado = adicionarMinhaLista(item, itensIniciais);
+		const resultado = alternarMinhaLista(item, itensIniciais);
 		if (resultado.sucesso) {
 			renderizarMinhaListaAtiva(listaContainer, nomePerfilAtivo);
 		}
@@ -401,6 +401,8 @@ function iniciarBusca(searchInput, searchButton) {
 		return;
 	}
 
+	const searchContainer = searchInput.closest('.header-search');
+
 	const redirecionarBusca = () => {
 		const termo = searchInput.value.trim();
 
@@ -424,6 +426,24 @@ function iniciarBusca(searchInput, searchButton) {
 		redirecionarBusca();
 		searchInput.focus();
 	});
+
+	const fecharBuscaAoInteragirFora = (event) => {
+		if (!searchContainer) {
+			return;
+		}
+
+		const alvo = event.target;
+		if (searchContainer.contains(alvo)) {
+			return;
+		}
+
+		if (document.activeElement === searchInput) {
+			searchInput.blur();
+		}
+	};
+
+	document.addEventListener('touchstart', fecharBuscaAoInteragirFora, { passive: true });
+	document.addEventListener('touchmove', fecharBuscaAoInteragirFora, { passive: true });
 }
 
 async function carregarSecaoGenero(genero, container) {
