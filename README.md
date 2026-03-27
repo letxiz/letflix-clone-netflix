@@ -15,6 +15,7 @@ Cada perfil possui conteúdos diferentes, simulando uma experiência real de str
 ## ✨ Funcionalidades
 
 - 👤 **Seleção de perfis:** Escolha entre diferentes usuários.
+- 🧩 **Gerenciamento de perfis:** Acesso via dropdown para remover perfis.
 - 🎬 **Catálogo dinâmico:** Conteúdo personalizado por usuário.
 - 🎨 **Interface Fiel:** Design inspirado na UI original da Netflix.
 - 🔄 **Navegação:** Transição suave entre páginas.
@@ -23,6 +24,8 @@ Cada perfil possui conteúdos diferentes, simulando uma experiência real de str
 - 📱 **Responsividade:** Layout adaptável para diferentes dispositivos.
 - 🔍 **Busca integrada:** Busca em tempo real usando API TMDB.
 - 🎯 **Preferências por gênero:** Sistema de recomendação baseado em preferências do usuário.
+- ➕➖ **Minha Lista interativa:** Adição e remoção de filmes/séries com um clique.
+- 🛡️ **Fallback de imagem:** Cards exibem imagem padrão quando o carregamento falha.
 
 ---
 
@@ -52,27 +55,51 @@ Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida 
 ## 📁 Estrutura do projeto
 
 ```bash
+.
 ├── assets/
+│   ├── avatars/
 │   ├── banner/
 │   ├── filmes/
+│   ├── generos/
 │   └── series/
+├── css/
+│   ├── busca.css
+│   ├── catalogo.css
+│   └── perfis.css
 ├── js/
 │   ├── components/
 │   │   ├── cards.js
 │   │   ├── dropdown.js
+│   │   ├── minha-lista.js
 │   │   └── perfil.js
 │   ├── data/
 │   │   ├── filmes.js
+│   │   ├── generos.js
 │   │   └── series.js
 │   └── paginas/
+│       ├── busca.js
 │       ├── catalogo.js
-│       └── index.js
-├── index.html
+│       ├── index.js
+│       └── perfis.js
+├── busca.html
 ├── catalogo.html
-├── style.css
-└── catalogo.css
-
+├── index.html
+├── perfis.html
+├── README.md
+└── style.css
 ```
+
+## ✅ Atualizações recentes
+
+- Ajustes de UX mobile em **busca** e **catálogo** (header, campo de busca e espaçamentos).
+- Fluxo de **Gerenciar perfis** centralizado no dropdown com abertura em modo de gerenciamento.
+- Botão **Adicionar perfil** reposicionado para melhor experiência em mobile e desktop.
+- Limite de opções de avatar para novos perfis no mobile.
+- Correções de títulos e caminhos de imagens legadas na **Minha Lista**.
+- Suporte para **remover itens da Minha Lista** pelo mesmo botão de adicionar.
+- Tratamento de fallback para evitar card com imagem quebrada.
+
+---
 
 ## Futuras Atualizações
 
@@ -106,7 +133,7 @@ Durante o desenvolvimento deste projeto, foram consolidados importantes conceito
 - Estilização avançada e técnicas de posicionamento com CSS  
 - Armazenamento de dados no navegador utilizando localStorage  
 - Integração com APIs RESTful externas  
-- Aplicação de boas práticas de segurança (variáveis de ambiente, .gitignore)  
+- Compreensão dos limites de segurança em aplicações front-end estáticas  
 - Aplicação de boas práticas de User Experience (UX)  
 - Desenvolvimento de interfaces responsivas
 - **Superação de desafios com JavaScript e DOM através da prática contínua**  
