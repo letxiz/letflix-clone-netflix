@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LETFLIX | Perfis</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="css/perfis.css">
+</head>
+<body class="profiles-page">
+	<header class="profiles-header">
+		<div class="profiles-header-top">
+			<a class="brand" href="perfis.html" aria-label="Voltar para seleção de perfis">LETFLIX</a>
+			<div class="profiles-actions">
+				<button class="manage-button" id="open-add-profile-btn" type="button" aria-label="Adicionar perfil">
+					Adicionar perfil
+				</button>
+				<button class="manage-button" id="toggle-manage-btn" type="button" aria-label="Gerenciar perfis">
+					Gerenciar perfis
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<main class="profiles-main">
+		<section class="profiles-section" aria-labelledby="profiles-title">
+			<h1 id="profiles-title">Escolha um perfil</h1>
+
+			<ul class="profiles-grid" id="profiles-grid">
+				<!-- Perfis serão renderizados aqui via JS -->
+			</ul>
+
+			<!-- Modal para adicionar novo perfil -->
+			<div class="add-profile-modal" id="add-profile-modal">
+				<div class="modal-content">
+					<h2>Novo Perfil</h2>
+					
+					<div class="modal-form-group">
+						<label for="profile-input">Nome do Perfil</label>
+						<input 
+							type="text" 
+							id="profile-input" 
+							placeholder="Digite o nome do perfil..."
+							maxlength="30"
+							autocomplete="off"
+						>
+					</div>
+
+					<div class="modal-form-group">
+						<label>Escolha um Avatar</label>
+						<div class="avatar-grid" id="avatar-grid">
+							<!-- Avatares serão renderizados aqui via JS -->
+						</div>
+					</div>
+
+					<div class="modal-buttons">
+						<button class="modal-btn-cancel" id="cancel-btn">Cancelar</button>
+						<button class="modal-btn-confirm" id="confirm-btn" disabled>Criar</button>
+					</div>
+					<div class="modal-message" id="modal-message" role="alert"></div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Modal de preferências (etapa 2 após criar perfil) -->
+	<div class="add-profile-modal" id="preferences-modal">
+		<div class="modal-content">
+			<h2>Suas Preferências</h2>
+			<p class="modal-subtitle">Escolha os gêneros que você curte (opcional)</p>
+
+			<div class="genres-grid" id="genres-grid">
+				<button class="genre-chip" type="button" data-genre="acao">Ação</button>
+				<button class="genre-chip" type="button" data-genre="comedia">Comédia</button>
+				<button class="genre-chip" type="button" data-genre="terror">Terror</button>
+				<button class="genre-chip" type="button" data-genre="anime">Anime</button>
+				<button class="genre-chip" type="button" data-genre="romance">Romance</button>
+			</div>
+
+			<div class="modal-buttons">
+				<button class="modal-btn-cancel" id="pref-skip-btn" type="button">Pular</button>
+				<button class="modal-btn-confirm" id="pref-confirm-btn" type="button">Salvar e Entrar</button>
+			</div>
+		</div>
+	</div>
+
+	<script type="module" src="js/paginas/perfis.js"></script>
+</body>
+</html>
