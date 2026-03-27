@@ -105,25 +105,87 @@
 }
 
 @media (max-width: 768px) {
+	.search-page .site-header__inner {
+		flex-wrap: wrap;
+		align-items: center;
+		row-gap: 0.7rem;
+	}
+
+	.search-page .header-left {
+		flex: 0 0 auto;
+	}
+
+	.search-page .header-right {
+		width: 100%;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.5rem;
+		margin-left: 0;
+	}
+
+	.search-page-main {
+		padding-top: calc(var(--header-height) + 3.4rem);
+	}
+
+	.search-query {
+		padding: 0 0.25rem 0.85rem;
+		font-size: 0.85rem;
+		line-height: 1.45;
+	}
+
 	.search-page .header-search,
 	.search-page .header-search:focus-within {
-		width: min(62vw, 230px);
+		width: 100%;
+		min-width: 0;
+		flex-basis: auto;
+	}
+
+	.search-page .header-search {
+		height: 42px;
+		border-radius: 999px;
+	}
+
+	.search-page #busca-tmdb,
+	.search-page .header-search:focus-within #busca-tmdb,
+	.header-search--open #busca-tmdb {
+		opacity: 1;
+		pointer-events: auto;
 	}
 
 	.search-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 0.85rem;
+		padding: 0 0.25rem 0.5rem;
 	}
 }
 
 @media (max-width: 480px) {
+	.search-page .header-right {
+		gap: 0.4rem;
+	}
+
+	.search-page-main {
+		padding-top: calc(var(--header-height) + 3.1rem);
+	}
+
 	.search-page .header-search,
 	.search-page .header-search:focus-within {
-		width: min(64vw, 200px);
+		width: 100%;
+	}
+
+	.search-page .header-search {
+		height: 40px;
 	}
 
 	.search-grid {
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.7rem;
+	}
+
+	.search-grid .movie-card .titulo {
+		font-size: 0.84rem;
+		line-height: 1.35;
 	}
 }
 
