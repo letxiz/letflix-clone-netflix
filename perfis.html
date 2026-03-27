@@ -10,13 +10,13 @@
 <body class="profiles-page">
 	<header class="profiles-header">
 		<div class="profiles-header-top">
-			<a class="brand" href="perfis.html" aria-label="Voltar para seleção de perfis">LETFLIX</a>
+			<a class="brand" href="perfis.html" aria-label="Voltar para seleção de perfis">
+				<span class="logo-full">LETFLIX</span>
+				<span class="logo-mobile">L</span>
+			</a>
 			<div class="profiles-actions">
 				<button class="manage-button" id="open-add-profile-btn" type="button" aria-label="Adicionar perfil">
 					Adicionar perfil
-				</button>
-				<button class="manage-button" id="toggle-manage-btn" type="button" aria-label="Gerenciar perfis">
-					Gerenciar perfis
 				</button>
 			</div>
 		</div>
@@ -25,10 +25,13 @@
 	<main class="profiles-main">
 		<section class="profiles-section" aria-labelledby="profiles-title">
 			<h1 id="profiles-title">Escolha um perfil</h1>
+			<p class="profiles-helper-text" id="profiles-helper-text" hidden>Toque em um perfil para removê-lo.</p>
 
 			<ul class="profiles-grid" id="profiles-grid">
 				<!-- Perfis serão renderizados aqui via JS -->
 			</ul>
+
+			<div class="profiles-add-action" id="profiles-add-action"></div>
 
 			<!-- Modal para adicionar novo perfil -->
 			<div class="add-profile-modal" id="add-profile-modal">

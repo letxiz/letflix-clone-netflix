@@ -11,7 +11,10 @@
     <header class="site-header">
         <div class="site-header__inner">
             <div class="header-left">
-                <a class="brand" href="catalogo.html" aria-label="Ir para a tela inicial">LETFLIX</a>
+                <a class="brand" href="catalogo.html" aria-label="Ir para a tela inicial">
+                    <span class="logo-full">LETFLIX</span>
+                    <span class="logo-mobile">L</span>
+                </a>
             </div>
 
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
@@ -40,6 +43,7 @@
                     <div class="perfil-dropdown" id="perfil-dropdown" role="menu" aria-hidden="true">
                         <p class="perfil-atual" id="perfil-atual">Perfil atual</p>
                         <a href="perfis.html" class="perfil-item" id="trocar-perfil" role="menuitem">Trocar perfil</a>
+                        <a href="perfis.html?modo=gerenciar" class="perfil-item" id="gerenciar-perfis" role="menuitem">Gerenciar perfis</a>
                         <button type="button" class="perfil-item" id="editar-perfil" role="menuitem">Editar perfil</button>
                         <button type="button" class="perfil-item" id="sair" role="menuitem">Sair</button>
                     </div>
