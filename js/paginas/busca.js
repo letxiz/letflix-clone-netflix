@@ -3,9 +3,8 @@ import { adicionarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfi
 import { garantirPerfilAtivo, obterPerfil, limparPerfil, atualizarPreferencias } from '../components/perfil.js';
 import { filmes } from '../data/filmes.js';
 import { renderizarResultadosExternos } from '../components/cards.js';
-import { APP_CONFIG } from '../../config.js';
 
-const TMDB_API_KEY = APP_CONFIG.TMDB_API_KEY;
+const TMDB_API_KEY = 'ea110bd872a84533513e396662c97fcc';
 const TMDB_SEARCH_ENDPOINT = 'https://api.themoviedb.org/3/search/multi';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w200';
 
@@ -153,14 +152,14 @@ function iniciarAcoesPerfil() {
 
 async function buscarNoTMDB(termo) {
 	if (!TMDB_API_KEY) {
-		throw new Error('TMDB API key nao configurada. Defina TMDB_API_KEY no config.js.');
+		throw new Error('TMDB API key nao configurada. Defina TMDB_API_KEY em js/paginas/busca.js.');
 	}
 
 	const url = `${TMDB_SEARCH_ENDPOINT}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(termo)}&language=pt-BR&include_adult=false`;
 	const response = await fetch(url);
 
 	if (!response.ok) {
-		throw new Error('Falha ao consultar o TMDB.');
+		throw new Error(`Falha ao consultar o TMDB. Status: ${response.status}`);
 	}
 
 	const data = await response.json();
@@ -235,6 +234,7 @@ async function carregarResultadosBusca(searchInput, queryText, resultsGrid) {
 		renderizarResultadosExternos(resultsGrid, resultados);
 		atualizarBotoesMinhaLista();
 	} catch (error) {
+		console.error('Erro ao carregar resultados do TMDB:', error);
 		queryText.textContent = 'Nao foi possivel carregar os resultados da busca.';
 		resultsGrid.innerHTML = '';
 	}
