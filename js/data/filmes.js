@@ -20,7 +20,7 @@ export const minhaLista = {
 	Evellyn: [
 		{ tipo: 'series', arquivo: 'Hellsing.jpg' },
 		{ tipo: 'filmes', arquivo: 'Attack on Titan.avf' },
-		{ tipo: 'series', arquivo: 'Bungou Stray Dogs.jpg' },
-		{ tipo: 'series', arquivo: 'To Your Eternity.jpg' }
+		{ tipo: 'series', arquivo: 'bungou stray dogs.jpg' },
+		{ tipo: 'series', arquivo: 'to your eternity.jpg' }
 	]
 };
