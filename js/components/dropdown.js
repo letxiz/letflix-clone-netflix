@@ -4,6 +4,11 @@ export function iniciarDropdown() {
 	const perfilHeader = document.getElementById('perfil-header');
 	const perfilTrigger = document.getElementById('perfil-trigger');
 	const perfilDropdown = document.getElementById('perfil-dropdown');
+	const closeProfileDropdown = () => {
+		perfilHeader.classList.remove('open');
+		perfilTrigger.setAttribute('aria-expanded', 'false');
+		perfilDropdown.setAttribute('aria-hidden', 'true');
+	};
 
 	if (menuToggle && catalogBody) {
 		menuToggle.addEventListener('click', () => {
@@ -23,13 +28,27 @@ export function iniciarDropdown() {
 
 		perfilTrigger.setAttribute('aria-expanded', String(isOpen));
 		perfilDropdown.setAttribute('aria-hidden', String(!isOpen));
+
+		if (isOpen) {
+			const primeiroItem = perfilDropdown.querySelector('.perfil-item');
+			if (primeiroItem instanceof HTMLElement) {
+				primeiroItem.focus();
+			}
+		}
 	});
 
 	document.addEventListener('click', (event) => {
 		if (!perfilHeader.contains(event.target)) {
-			perfilHeader.classList.remove('open');
-			perfilTrigger.setAttribute('aria-expanded', 'false');
-			perfilDropdown.setAttribute('aria-hidden', 'true');
+			closeProfileDropdown();
 		}
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Escape') {
+			return;
+		}
+
+		closeProfileDropdown();
+		perfilTrigger.focus();
 	});
 }

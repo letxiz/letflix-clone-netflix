@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="css/busca.css">
 </head>
 <body class="catalog-page search-page">
+	<a class="skip-link" href="#main-content">Pular para o conteudo principal</a>
+	<div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 	<header class="site-header">
 		<div class="site-header__inner">
 			<div class="header-left">
@@ -52,7 +54,7 @@
 		</div>
 	</header>
 
-	<main class="search-page-main">
+	<main id="main-content" class="search-page-main">
 		<section class="catalog-section search-page-section" aria-labelledby="busca-title">
 			<div class="section-heading">
 				<h2 id="busca-title">Resultados da busca</h2>
@@ -63,17 +65,17 @@
 	</main>
 
 	<!-- Modal para editar preferências do perfil -->
-	<div class="edit-preferences-modal" id="edit-preferences-modal">
+	<div class="edit-preferences-modal" id="edit-preferences-modal" role="dialog" aria-modal="true" aria-labelledby="edit-preferences-title" aria-describedby="edit-preferences-subtitle" aria-hidden="true" tabindex="-1">
 		<div class="modal-content">
-			<h2>Editar Preferências</h2>
-			<p class="modal-subtitle">Escolha os gêneros que você curte (opcional)</p>
+			<h2 id="edit-preferences-title">Editar Preferências</h2>
+			<p class="modal-subtitle" id="edit-preferences-subtitle">Escolha os gêneros que você curte (opcional)</p>
 
 			<div class="genres-grid" id="edit-genres-grid">
-				<button class="genre-chip" type="button" data-genre="acao">Ação</button>
-				<button class="genre-chip" type="button" data-genre="comedia">Comédia</button>
-				<button class="genre-chip" type="button" data-genre="terror">Terror</button>
-				<button class="genre-chip" type="button" data-genre="anime">Anime</button>
-				<button class="genre-chip" type="button" data-genre="romance">Romance</button>
+				<button class="genre-chip" type="button" data-genre="acao" aria-pressed="false">Ação</button>
+				<button class="genre-chip" type="button" data-genre="comedia" aria-pressed="false">Comédia</button>
+				<button class="genre-chip" type="button" data-genre="terror" aria-pressed="false">Terror</button>
+				<button class="genre-chip" type="button" data-genre="anime" aria-pressed="false">Anime</button>
+				<button class="genre-chip" type="button" data-genre="romance" aria-pressed="false">Romance</button>
 			</div>
 
 			<div class="modal-buttons">

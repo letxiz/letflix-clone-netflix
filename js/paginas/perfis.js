@@ -12,6 +12,7 @@ import {
 let emModoGerenciamento = false;
 let avatarSelecionado = null;
 let nomePerfilPendente = null;
+let ultimoElementoComFocoModal = null;
 const mediaQueryMobile = window.matchMedia('(max-width: 768px)');
 const LIMITE_AVATARES_MOBILE = 4;
 
@@ -168,6 +169,8 @@ function renderizarAvatarGrid() {
 	if (!avatarGrid) return;
 	
 	avatarGrid.innerHTML = '';
+	avatarGrid.setAttribute('role', 'listbox');
+	avatarGrid.setAttribute('aria-label', 'Opcoes de avatar');
 
 	const avataresDisponiveis = obterAvataresDisponiveis();
 
@@ -176,31 +179,37 @@ function renderizarAvatarGrid() {
 	}
 	
 	avataresDisponiveis.forEach((avatar) => {
-		const div = document.createElement('div');
-		div.className = 'avatar-option';
+		const botaoAvatar = document.createElement('button');
+		botaoAvatar.className = 'avatar-option';
+		botaoAvatar.type = 'button';
+		botaoAvatar.setAttribute('role', 'option');
+		botaoAvatar.setAttribute('aria-label', `Selecionar avatar ${avatar.split('/').pop() || ''}`);
 		if (avatarSelecionado === avatar) {
-			div.classList.add('selected');
+			botaoAvatar.classList.add('selected');
 		}
+		botaoAvatar.setAttribute('aria-selected', String(avatarSelecionado === avatar));
 		
 		const img = document.createElement('img');
 		img.src = avatar;
 		img.alt = `Avatar opção`;
 		img.loading = 'lazy';
 		
-		div.appendChild(img);
+		botaoAvatar.appendChild(img);
 		
-		div.addEventListener('click', () => {
+		botaoAvatar.addEventListener('click', () => {
 			// Remover selected de todos
 			document.querySelectorAll('.avatar-option').forEach(opt => {
 				opt.classList.remove('selected');
+				opt.setAttribute('aria-selected', 'false');
 			});
 			
 			// Adicionar selected ao clicado
-			div.classList.add('selected');
+			botaoAvatar.classList.add('selected');
+			botaoAvatar.setAttribute('aria-selected', 'true');
 			avatarSelecionado = avatar;
 		});
 		
-		avatarGrid.appendChild(div);
+		avatarGrid.appendChild(botaoAvatar);
 	});
 }
 function abrirModalAdicionarPerfil() {
@@ -208,11 +217,13 @@ function abrirModalAdicionarPerfil() {
 	const input = document.getElementById('profile-input');
 	
 	if (!modal || !input) return;
+	ultimoElementoComFocoModal = document.activeElement;
 	
 	// Renderizar grid de avatares
 	renderizarAvatarGrid();
 	
 	modal.classList.add('active');
+	modal.setAttribute('aria-hidden', 'false');
 	input.focus();
 	input.value = '';
 	avatarSelecionado = null;
@@ -224,9 +235,13 @@ function fecharModal() {
 	const modal = document.getElementById('add-profile-modal');
 	if (modal) {
 		modal.classList.remove('active');
+		modal.setAttribute('aria-hidden', 'true');
 		document.getElementById('profile-input').value = '';
 		avatarSelecionado = null;
 		limparMensagemModal();
+		if (ultimoElementoComFocoModal instanceof HTMLElement) {
+			ultimoElementoComFocoModal.focus();
+		}
 	}
 }
 
@@ -283,15 +298,30 @@ function confirmarNovoPerf() {
 function abrirModalPreferencias() {
 	const modal = document.getElementById('preferences-modal');
 	if (!modal) return;
+	ultimoElementoComFocoModal = document.activeElement;
 
 	// Reset selection
-	modal.querySelectorAll('.genre-chip').forEach(chip => chip.classList.remove('selected'));
+	modal.querySelectorAll('.genre-chip').forEach(chip => {
+		chip.classList.remove('selected');
+		chip.setAttribute('aria-pressed', 'false');
+	});
 	modal.classList.add('active');
+	modal.setAttribute('aria-hidden', 'false');
+	const primeiroChip = modal.querySelector('.genre-chip');
+	if (primeiroChip instanceof HTMLElement) {
+		primeiroChip.focus();
+	}
 }
 
 function fecharModalPreferencias() {
 	const modal = document.getElementById('preferences-modal');
-	if (modal) modal.classList.remove('active');
+	if (modal) {
+		modal.classList.remove('active');
+		modal.setAttribute('aria-hidden', 'true');
+		if (ultimoElementoComFocoModal instanceof HTMLElement) {
+			ultimoElementoComFocoModal.focus();
+		}
+	}
 }
 
 function entrarComPerfil() {
@@ -415,6 +445,13 @@ function iniciarPaginaPerfis() {
 				fecharModal();
 			}
 		});
+
+		modal.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				fecharModal();
+			}
+		});
 	}
 
 	// Modal de preferências
@@ -432,7 +469,18 @@ function iniciarPaginaPerfis() {
 
 	if (prefModal) {
 		document.querySelectorAll('#genres-grid .genre-chip').forEach(chip => {
-			chip.addEventListener('click', () => chip.classList.toggle('selected'));
+			chip.addEventListener('click', () => {
+				chip.classList.toggle('selected');
+				chip.setAttribute('aria-pressed', String(chip.classList.contains('selected')));
+			});
+			chip.setAttribute('aria-pressed', String(chip.classList.contains('selected')));
+		});
+
+		prefModal.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				fecharModalPreferencias();
+			}
 		});
 	}
 }

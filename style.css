@@ -24,12 +24,59 @@ html {
 	scroll-behavior: smooth;
 }
 
+:focus-visible {
+	outline: 3px solid #f6c354;
+	outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+[role='button']:focus-visible {
+	box-shadow: 0 0 0 3px rgba(246, 195, 84, 0.35);
+}
+
 body {
 	min-height: 100vh;
 	color: var(--color-text);
 	font-family: 'Montserrat', sans-serif;
 	background: var(--color-black);
 
+}
+
+.skip-link {
+	position: absolute;
+	left: 0.75rem;
+	top: 0.75rem;
+	padding: 0.6rem 0.85rem;
+	background: #ffffff;
+	color: #000000;
+	border-radius: 0.4rem;
+	font-weight: 700;
+	text-decoration: none;
+	z-index: 9999;
+	transform: translateY(-140%);
+	transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+	transform: translateY(0);
+	text-decoration: none;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 button {
@@ -237,7 +284,21 @@ button {
 .perfil-item:focus-visible {
 	background: rgba(255, 255, 255, 0.08);
 	color: var(--color-brand);
-	outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 

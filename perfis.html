@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="css/perfis.css">
 </head>
 <body class="profiles-page">
+	<a class="skip-link" href="#main-content">Pular para o conteudo principal</a>
+	<div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 	<header class="profiles-header">
 		<div class="profiles-header-top">
 			<a class="brand" href="perfis.html" aria-label="Voltar para seleção de perfis">
@@ -22,7 +24,7 @@
 		</div>
 	</header>
 
-	<main class="profiles-main">
+	<main id="main-content" class="profiles-main">
 		<section class="profiles-section" aria-labelledby="profiles-title">
 			<h1 id="profiles-title">Escolha um perfil</h1>
 			<p class="profiles-helper-text" id="profiles-helper-text" hidden>Toque em um perfil para removê-lo.</p>
@@ -34,9 +36,10 @@
 			<div class="profiles-add-action" id="profiles-add-action"></div>
 
 			<!-- Modal para adicionar novo perfil -->
-			<div class="add-profile-modal" id="add-profile-modal">
+			<div class="add-profile-modal" id="add-profile-modal" role="dialog" aria-modal="true" aria-labelledby="add-profile-title" aria-describedby="add-profile-subtitle" aria-hidden="true" tabindex="-1">
 				<div class="modal-content">
-					<h2>Novo Perfil</h2>
+					<h2 id="add-profile-title">Novo Perfil</h2>
+					<p class="modal-subtitle" id="add-profile-subtitle">Crie um perfil escolhendo nome e avatar.</p>
 					
 					<div class="modal-form-group">
 						<label for="profile-input">Nome do Perfil</label>
@@ -50,15 +53,15 @@
 					</div>
 
 					<div class="modal-form-group">
-						<label>Escolha um Avatar</label>
+						<label id="avatar-grid-label">Escolha um Avatar</label>
 						<div class="avatar-grid" id="avatar-grid">
 							<!-- Avatares serão renderizados aqui via JS -->
 						</div>
 					</div>
 
 					<div class="modal-buttons">
-						<button class="modal-btn-cancel" id="cancel-btn">Cancelar</button>
-						<button class="modal-btn-confirm" id="confirm-btn" disabled>Criar</button>
+						<button class="modal-btn-cancel" id="cancel-btn" type="button">Cancelar</button>
+						<button class="modal-btn-confirm" id="confirm-btn" type="button" disabled>Criar</button>
 					</div>
 					<div class="modal-message" id="modal-message" role="alert"></div>
 				</div>
@@ -67,17 +70,17 @@
 	</main>
 
 	<!-- Modal de preferências (etapa 2 após criar perfil) -->
-	<div class="add-profile-modal" id="preferences-modal">
+	<div class="add-profile-modal" id="preferences-modal" role="dialog" aria-modal="true" aria-labelledby="preferences-title" aria-describedby="preferences-subtitle" aria-hidden="true" tabindex="-1">
 		<div class="modal-content">
-			<h2>Suas Preferências</h2>
-			<p class="modal-subtitle">Escolha os gêneros que você curte (opcional)</p>
+			<h2 id="preferences-title">Suas Preferências</h2>
+			<p class="modal-subtitle" id="preferences-subtitle">Escolha os gêneros que você curte (opcional)</p>
 
 			<div class="genres-grid" id="genres-grid">
-				<button class="genre-chip" type="button" data-genre="acao">Ação</button>
-				<button class="genre-chip" type="button" data-genre="comedia">Comédia</button>
-				<button class="genre-chip" type="button" data-genre="terror">Terror</button>
-				<button class="genre-chip" type="button" data-genre="anime">Anime</button>
-				<button class="genre-chip" type="button" data-genre="romance">Romance</button>
+				<button class="genre-chip" type="button" data-genre="acao" aria-pressed="false">Ação</button>
+				<button class="genre-chip" type="button" data-genre="comedia" aria-pressed="false">Comédia</button>
+				<button class="genre-chip" type="button" data-genre="terror" aria-pressed="false">Terror</button>
+				<button class="genre-chip" type="button" data-genre="anime" aria-pressed="false">Anime</button>
+				<button class="genre-chip" type="button" data-genre="romance" aria-pressed="false">Romance</button>
 			</div>
 
 			<div class="modal-buttons">

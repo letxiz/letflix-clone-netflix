@@ -34,10 +34,10 @@ function criarCard(src, titulo, item = {}) {
 	const fallbackEscapado = escaparAtributo(CARD_IMAGE_FALLBACK);
 
 	return `
-		<article class="movie-card card" tabindex="0" data-titulo="${tituloEscapado}" data-imagem="${imagem}" data-tipo="${tipo}" data-arquivo="${arquivo}">
+		<article class="movie-card card" tabindex="0" role="group" aria-label="${tituloEscapado}" data-titulo="${tituloEscapado}" data-imagem="${imagem}" data-tipo="${tipo}" data-arquivo="${arquivo}">
 			<div class="movie-card-media">
 				<img src="${encodeURI(src)}" alt="${tituloEscapado}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackEscapado}';">
-				<button class="btn-add" type="button" aria-label="Adicionar ${tituloEscapado} à Minha Lista">+</button>
+				<button class="btn-add" type="button" aria-label="Adicionar ${tituloEscapado} à Minha Lista" aria-pressed="false">+</button>
 			</div>
 			<p class="titulo">${titulo}</p>
 		</article>

@@ -8,6 +8,26 @@ import { series } from '../data/series.js';
 
 const INFO_AUTO_CLOSE_MS = 6000;
 let infoAutoCloseTimer = null;
+let ultimoElementoComFocoModal = null;
+
+function anunciarStatusAcessibilidade(mensagem) {
+	const status = document.getElementById('a11y-status');
+	if (!status) {
+		return;
+	}
+
+	status.textContent = '';
+	window.setTimeout(() => {
+		status.textContent = mensagem;
+	}, 10);
+}
+
+function atualizarEstadoChipsPreferencias() {
+	document.querySelectorAll('#edit-genres-grid .genre-chip').forEach((chip) => {
+		const selecionado = chip.classList.contains('selected');
+		chip.setAttribute('aria-pressed', String(selecionado));
+	});
+}
 
 const DESTAQUE_GENERICO = {
 	titulo: 'Seu perfil LETFLIX',
@@ -153,6 +173,7 @@ function atualizarBotoesMinhaLista(itensIniciais = []) {
 		const estaNaLista = item ? idsSalvos.has(obterIdentificadorMinhaLista(item)) : false;
 		botao.classList.toggle('is-added', estaNaLista);
 		botao.textContent = estaNaLista ? '−' : '+';
+		botao.setAttribute('aria-pressed', String(estaNaLista));
 		botao.setAttribute('aria-label', estaNaLista
 			? `Remover ${item?.titulo || 'item'} da Minha Lista`
 			: `Adicionar ${item?.titulo || 'item'} à Minha Lista`);
@@ -191,6 +212,9 @@ function iniciarMinhaLista(listaContainer, nomePerfilAtivo) {
 		const resultado = alternarMinhaLista(item, itensIniciais);
 		if (resultado.sucesso) {
 			renderizarMinhaListaAtiva(listaContainer, nomePerfilAtivo);
+			anunciarStatusAcessibilidade(resultado.acao === 'adicionado'
+				? `${item.titulo || 'Item'} adicionado a Minha Lista.`
+				: `${item.titulo || 'Item'} removido de Minha Lista.`);
 		}
 
 		atualizarBotoesMinhaLista(itensIniciais);
@@ -279,6 +303,7 @@ function mostrarInfo(perfil) {
 function abrirModalEditarPreferencias(nomePerfilAtivo) {
 	const modal = document.getElementById('edit-preferences-modal');
 	if (!modal) return;
+	ultimoElementoComFocoModal = document.activeElement;
 
 	// Reset all selections
 	modal.querySelectorAll('#edit-genres-grid .genre-chip').forEach(chip => {
@@ -296,12 +321,22 @@ function abrirModalEditarPreferencias(nomePerfilAtivo) {
 	}
 
 	modal.classList.add('active');
+	modal.setAttribute('aria-hidden', 'false');
+	atualizarEstadoChipsPreferencias();
+	const primeiroChip = modal.querySelector('.genre-chip');
+	if (primeiroChip instanceof HTMLElement) {
+		primeiroChip.focus();
+	}
 }
 
 function fecharModalEditarPreferencias() {
 	const modal = document.getElementById('edit-preferences-modal');
 	if (modal) {
 		modal.classList.remove('active');
+		modal.setAttribute('aria-hidden', 'true');
+		if (ultimoElementoComFocoModal instanceof HTMLElement) {
+			ultimoElementoComFocoModal.focus();
+		}
 	}
 }
 
@@ -361,12 +396,24 @@ function iniciarAcoesPerfil() {
 
 		// Toggle genre chip selection
 		editPrefsModal.querySelectorAll('#edit-genres-grid .genre-chip').forEach(chip => {
-			chip.addEventListener('click', () => chip.classList.toggle('selected'));
+			chip.addEventListener('click', () => {
+				chip.classList.toggle('selected');
+				atualizarEstadoChipsPreferencias();
+			});
 		});
+
+		atualizarEstadoChipsPreferencias();
 
 		// Close modal on clicking outside
 		editPrefsModal.addEventListener('click', (e) => {
 			if (e.target === editPrefsModal) {
+				fecharModalEditarPreferencias();
+			}
+		});
+
+		editPrefsModal.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
 				fecharModalEditarPreferencias();
 			}
 		});
