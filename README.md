@@ -99,6 +99,7 @@ Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida 
 - Suporte para **remover itens da Minha Lista** pelo mesmo botão de adicionar.
 - Tratamento de fallback para evitar card com imagem quebrada.
 - Correção no botão **Assistir agora** para evitar abertura duplicada: nova aba iniciada com `about:blank`, destino aplicado via `location.href` e fallback em `window.location.assign` quando necessário.
+- Correção no layout da **busca** quando houver apenas 1 resultado, evitando que o card/imagem fique gigante no desktop.
 
 ---
 
