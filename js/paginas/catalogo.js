@@ -231,11 +231,17 @@ function abrirLinkAssistir(perfil) {
 		return;
 	}
 
-	const openedWindow = window.open(destaque.assistir, '_blank', 'noopener,noreferrer');
+	// Abre uma aba neutra e só depois define o destino.
+	// Isso evita abrir na aba atual por engano quando o navegador retorna null no window.open.
+	const openedWindow = window.open('about:blank', '_blank');
 
-	if (!openedWindow) {
-		window.location.assign(destaque.assistir);
+	if (openedWindow) {
+		openedWindow.opener = null;
+		openedWindow.location.href = destaque.assistir;
+		return;
 	}
+
+	window.location.assign(destaque.assistir);
 }
 
 function fecharInfoPanel() {
