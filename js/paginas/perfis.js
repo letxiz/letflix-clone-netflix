@@ -16,6 +16,10 @@ let ultimoElementoComFocoModal = null;
 const mediaQueryMobile = window.matchMedia('(max-width: 768px)');
 const LIMITE_AVATARES_MOBILE = 4;
 
+function obterChaveIntroPerfil(nomePerfil) {
+	return `intro_${nomePerfil}`;
+}
+
 const GENERO_LABELS = {
 	acao: 'Ação',
 	comedia: 'Comédia',
@@ -147,12 +151,105 @@ function posicionarBotaoAdicionar() {
 }
 
 function entrarPerfil(nome, destino) {
-	document.body.classList.add('is-leaving');
-	
-	setTimeout(() => {
-		salvarPerfil(nome);
+	const intro = document.getElementById('intro');
+	const video = document.getElementById('introVideo');
+	const pularBtn = document.getElementById('pularIntro');
+	const perfilHeader = document.querySelector('.profiles-header');
+	const perfilMain = document.getElementById('main-content');
+	const introPerfilKey = obterChaveIntroPerfil(nome);
+
+	// Salvar perfil antes de qualquer navegação
+	salvarPerfil(nome);
+
+	let introJaMostrada = false;
+	try {
+		introJaMostrada = sessionStorage.getItem(introPerfilKey) === 'true';
+	} catch {
+		introJaMostrada = false;
+	}
+
+	const ocultarTelaPerfis = () => {
+		if (perfilHeader) {
+			perfilHeader.style.visibility = 'hidden';
+		}
+		if (perfilMain) {
+			perfilMain.style.visibility = 'hidden';
+		}
+	};
+
+	if (introJaMostrada) {
+		ocultarTelaPerfis();
 		window.location.href = destino;
-	}, 400);
+		return;
+	}
+
+	// Fallback: se o overlay ou o vídeo não existirem, redirecionar normalmente
+	if (!intro || !video) {
+		document.body.classList.add('is-leaving');
+		setTimeout(() => {
+			window.location.href = destino;
+		}, 400);
+		return;
+	}
+
+	// Chamada única para redirecionar — evita disparo duplo via onended + pularBtn
+	let jaRedirecionou = false;
+	function concluirIntro() {
+		if (jaRedirecionou) {
+			return;
+		}
+		jaRedirecionou = true;
+		video.pause();
+
+		// Fade-out suave (0.4s) e depois redirecionar.
+		// IMPORTANTE: NÃO esconder #intro antes do redirect — a div permanece
+		// visível como tela preta durante a navegação, eliminando qualquer flash
+		// da página de perfis entre o fim do fade e o carregamento do catálogo.
+		intro.classList.add('intro-fade-out');
+		intro.setAttribute('aria-hidden', 'true');
+		try {
+			sessionStorage.setItem(introPerfilKey, 'true');
+		} catch {
+			// Ignora falha de storage e segue fluxo normalmente.
+		}
+		setTimeout(() => {
+			window.location.href = destino;
+		}, 220);
+	}
+
+	// Aceleração leve: ~11s ÷ 1.4 ≈ 7.9s — mantém o início cinematográfico e o final "LETFLIX" visíveis
+	video.playbackRate = 1.4;
+	// Áudio habilitado com volume confortável.
+	video.muted = false;
+	video.volume = 0.45;
+	// Garantir que sempre começa do início
+	video.currentTime = 0;
+
+	// Exibir overlay — cobre toda a tela (z-index 9999, fundo preto).
+	// NÃO adicionar is-leaving ao body: isso tornaria o #intro invisível também,
+	// pois ele é filho do body. O conteúdo de perfis fica coberto pelo próprio overlay.
+	intro.style.display = 'flex';
+	intro.setAttribute('aria-hidden', 'false');
+	if (pularBtn instanceof HTMLElement) {
+		pularBtn.focus();
+	}
+
+	// Esconder apenas o conteúdo de perfis (header + main), não o body inteiro
+	ocultarTelaPerfis();
+
+	// Redirecionar ao fim natural do vídeo
+	video.onended = concluirIntro;
+
+	// Botão "Pular intro"
+	if (pularBtn) {
+		pularBtn.onclick = concluirIntro;
+	}
+
+	// Iniciar reprodução (interação do usuário já foi feita ao clicar no perfil)
+	video.play().catch(() => {
+		// Autoplay bloqueado pelo navegador: ir direto ao catálogo
+		concluirIntro();
+	});
 }
 
 function obterAvataresDisponiveis() {
@@ -170,7 +267,6 @@ function renderizarAvatarGrid() {
 	
 	avatarGrid.innerHTML = '';
 	avatarGrid.setAttribute('role', 'listbox');
-	avatarGrid.setAttribute('aria-label', 'Opcoes de avatar');
 
 	const avataresDisponiveis = obterAvataresDisponiveis();
 
@@ -189,9 +285,10 @@ function renderizarAvatarGrid() {
 		}
 		botaoAvatar.setAttribute('aria-selected', String(avatarSelecionado === avatar));
 		
+		const numero = avataresDisponiveis.indexOf(avatar) + 1;
 		const img = document.createElement('img');
 		img.src = avatar;
-		img.alt = `Avatar opção`;
+		img.alt = `Avatar opção ${numero}`;
 		img.loading = 'lazy';
 		
 		botaoAvatar.appendChild(img);
@@ -344,7 +441,8 @@ function confirmarDelecao(nome) {
 	const confirmar = confirm(`Tem certeza que deseja deletar o perfil "${nome}"?`);
 	
 	if (confirmar) {
-		const resultado = deletarPerfil(nome);
+		const perfilSelecionado = obterPerfilAtivo()?.nome || '';
+		const resultado = deletarPerfil(nome, perfilSelecionado);
 		
 		if (resultado.sucesso) {
 			renderizarPerfis();
@@ -383,13 +481,6 @@ function aplicarModoGerenciamento(ativo) {
 function iniciarPaginaPerfis() {
 	const params = new URLSearchParams(window.location.search);
 	const abriuModoGerenciamento = params.get('modo') === 'gerenciar';
-
-	// Se houver perfil ativo, redirecionar
-	const perfilAtivo = obterPerfilAtivo();
-	if (perfilAtivo && !abriuModoGerenciamento) {
-		window.location.href = 'catalogo.html';
-		return;
-	}
 	
 	// Renderizar perfis
 	renderizarPerfis();

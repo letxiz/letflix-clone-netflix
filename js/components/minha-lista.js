@@ -1,4 +1,5 @@
 const PREFIXO_MINHA_LISTA = 'minhaLista_';
+const NOTIFICACOES_STORAGE_PREFIX = 'notificacoes_';
 
 const ARQUIVOS_LEGADOS = {
 	'HarryPotter1.jpg': 'Harry Potter 1.jpg',
@@ -130,6 +131,54 @@ function salvarLista(nomePerfil, itens) {
 	localStorage.setItem(obterChaveMinhaLista(nomePerfil), JSON.stringify(itens.map(normalizarItemLista)));
 }
 
+function obterChaveNotificacoes(nomePerfil) {
+	return `${NOTIFICACOES_STORAGE_PREFIX}${nomePerfil}`;
+}
+
+function lerNotificacoes(nomePerfil) {
+	if (!nomePerfil) {
+		return [];
+	}
+
+	try {
+		const dados = JSON.parse(localStorage.getItem(obterChaveNotificacoes(nomePerfil)) || '[]');
+		return Array.isArray(dados)
+			? dados.filter((item) => typeof item === 'string' && item.trim() !== '')
+			: [];
+	} catch {
+		return [];
+	}
+}
+
+export function obterNotificacoes() {
+	const perfilAtivo = obterPerfilAtivoStorage();
+	const nomePerfil = perfilAtivo?.nome || '';
+	return lerNotificacoes(nomePerfil);
+}
+
+export function adicionarNotificacao(texto, nomePerfil) {
+	if (!texto || typeof texto !== 'string' || !nomePerfil) {
+		return;
+	}
+
+	const notificacoes = lerNotificacoes(nomePerfil);
+	notificacoes.unshift(texto.trim());
+	const chave = obterChaveNotificacoes(nomePerfil);
+	localStorage.setItem(chave, JSON.stringify(notificacoes));
+
+	window.dispatchEvent(new CustomEvent('letflix:notificacoes-updated', {
+		detail: { nomePerfil, chave, total: notificacoes.length }
+	}));
+}
+
+function adicionarNaLista(nome, nomePerfil) {
+	adicionarNotificacao(`${nome} foi adicionado à sua Lista`, nomePerfil);
+}
+
+function removerDaLista(nome, nomePerfil) {
+	adicionarNotificacao(`${nome} foi removido da sua Lista`, nomePerfil);
+}
+
 export function obterMinhaListaPerfilAtivo(itensIniciais = []) {
 	const perfilAtivo = obterPerfilAtivoStorage();
 	const nomePerfil = perfilAtivo?.nome || '';
@@ -191,15 +240,24 @@ export function removerMinhaLista(item, itensIniciais = []) {
 }
 
 export function alternarMinhaLista(item, itensIniciais = []) {
+	const perfilAtivo = obterPerfilAtivoStorage();
+	const nomePerfil = perfilAtivo?.nome || '';
 	const listaAtual = obterMinhaListaPerfilAtivo(itensIniciais);
 	const itemNormalizado = normalizarItemLista(item);
 	const jaExiste = listaAtual.some((listaItem) => listaItem.id === itemNormalizado.id);
+	const nomeItem = itemNormalizado.titulo || 'item';
 
 	if (jaExiste) {
 		const resultado = removerMinhaLista(itemNormalizado, itensIniciais);
+		if (resultado.sucesso) {
+			removerDaLista(nomeItem, nomePerfil);
+		}
 		return { ...resultado, acao: 'removido' };
 	}
 
 	const resultado = adicionarMinhaLista(itemNormalizado, itensIniciais);
+	if (resultado.sucesso) {
+		adicionarNaLista(nomeItem, nomePerfil);
+	}
 	return { ...resultado, acao: 'adicionado' };
 }

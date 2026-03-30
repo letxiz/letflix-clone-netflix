@@ -269,6 +269,23 @@ function configurarNavegacaoBusca(searchInput, searchButton) {
 	document.addEventListener('touchmove', fecharBuscaAoInteragirFora, { passive: true });
 }
 
+function iniciarBotaoVoltarBusca(botaoVoltar) {
+	if (!botaoVoltar) {
+		return;
+	}
+
+	botaoVoltar.addEventListener('click', () => {
+		const temHistorico = window.history.length > 1 && document.referrer !== '';
+
+		if (temHistorico) {
+			window.history.back();
+			return;
+		}
+
+		window.location.href = 'catalogo.html';
+	});
+}
+
 async function carregarResultadosBusca(searchInput, queryText, resultsGrid) {
 	if (!searchInput || !queryText || !resultsGrid) {
 		return;
@@ -330,6 +347,7 @@ function iniciarPaginaBusca() {
 	const perfilAtual = document.getElementById('perfil-atual');
 	const searchInput = document.getElementById('busca-tmdb');
 	const searchButton = document.getElementById('buscar-acao');
+	const backButton = document.getElementById('mobile-back-button');
 	const queryText = document.getElementById('busca-query-text');
 	const resultsGrid = document.getElementById('resultados-busca-grid');
 
@@ -347,6 +365,7 @@ function iniciarPaginaBusca() {
 	iniciarDropdown();
 	iniciarAcoesPerfil();
 	configurarNavegacaoBusca(searchInput, searchButton);
+	iniciarBotaoVoltarBusca(backButton);
 	iniciarMinhaListaBusca();
 	carregarResultadosBusca(searchInput, queryText, resultsGrid);
 }

@@ -1,6 +1,7 @@
 const PERFIL_STORAGE_KEY = 'perfilAtivo';
 const PERFIL_STORAGE_LEGACY_KEY = 'perfil';
 const PERFIS_COLLECTION_KEY = 'perfis';
+const NOTIFICACOES_STORAGE_PREFIX = 'notificacoes_';
 const PERFIL_PADRAO = 'Leticinha';
 const MAX_PERFIS = 5;
 const BANNER_PADRAO = 'assets/background/banner1.jpg';
@@ -287,7 +288,26 @@ export function adicionarPerfil(nome, avatarSelecionado = null) {
 	return { sucesso: true, perfil: novoPerfil };
 }
 
-export function deletarPerfil(nome) {
+function adicionarNotificacaoPerfil(nomePerfil, texto) {
+	if (!nomePerfil || !texto) {
+		return;
+	}
+
+	const chave = `${NOTIFICACOES_STORAGE_PREFIX}${nomePerfil}`;
+	let notificacoes = [];
+
+	try {
+		const dados = JSON.parse(localStorage.getItem(chave) || '[]');
+		notificacoes = Array.isArray(dados) ? dados.filter((item) => typeof item === 'string') : [];
+	} catch {
+		notificacoes = [];
+	}
+
+	notificacoes.unshift(texto);
+	localStorage.setItem(chave, JSON.stringify(notificacoes));
+}
+
+export function deletarPerfil(nome, perfilSelecionado = '') {
 	const perfis = obterPerfisCollection();
 	const indice = perfis.findIndex(p => p.nome === nome);
 	
@@ -302,6 +322,10 @@ export function deletarPerfil(nome) {
 	
 	perfis.splice(indice, 1);
 	salvarPerfisCollection(perfis);
+
+	if (perfilSelecionado) {
+		adicionarNotificacaoPerfil(perfilSelecionado, `${nome} foi removido por ${perfilSelecionado}`);
+	}
 	
 	return { sucesso: true, mensagem: 'Perfil deletado' };
 }

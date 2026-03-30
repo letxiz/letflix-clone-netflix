@@ -1,7 +1,7 @@
 import { renderizarCards, renderizarCardsLocais, renderizarLista } from '../components/cards.js';
 import { iniciarDropdown } from '../components/dropdown.js';
 import { alternarMinhaLista, obterIdentificadorMinhaLista, obterMinhaListaPerfilAtivo } from '../components/minha-lista.js';
-import { garantirPerfilAtivo, obterPerfil, limparPerfil, obterPerfilPorNome, atualizarPreferencias } from '../components/perfil.js';
+import { garantirPerfilAtivo, obterPerfil, limparPerfil, obterPerfilPorNome, atualizarPreferencias, obterPerfisCollection, deletarPerfil } from '../components/perfil.js';
 import { generosLocais } from '../data/generos.js';
 import { filmes, minhaLista } from '../data/filmes.js';
 import { series } from '../data/series.js';
@@ -9,6 +9,10 @@ import { series } from '../data/series.js';
 const INFO_AUTO_CLOSE_MS = 6000;
 let infoAutoCloseTimer = null;
 let ultimoElementoComFocoModal = null;
+let ultimoElementoComFocoGerenciar = null;
+let ultimoElementoComFocoConfirmacao = null;
+let acaoConfirmarRemocao = null;
+let toastTimer = null;
 
 function anunciarStatusAcessibilidade(mensagem) {
 	const status = document.getElementById('a11y-status');
@@ -20,6 +24,24 @@ function anunciarStatusAcessibilidade(mensagem) {
 	window.setTimeout(() => {
 		status.textContent = mensagem;
 	}, 10);
+}
+
+function mostrarNotificacao(mensagem) {
+	const toast = document.getElementById('ui-toast');
+	if (!toast) {
+		return;
+	}
+
+	if (toastTimer) {
+		window.clearTimeout(toastTimer);
+	}
+
+	toast.textContent = mensagem;
+	toast.classList.add('is-visible');
+
+	toastTimer = window.setTimeout(() => {
+		toast.classList.remove('is-visible');
+	}, 2200);
 }
 
 function atualizarEstadoChipsPreferencias() {
@@ -359,8 +381,154 @@ function salvarPreferenciasEditar(nomePerfilAtivo) {
 	window.location.reload();
 }
 
+function abrirConfirmacaoRemocao(acaoConfirmar) {
+	const modal = document.getElementById('delete-confirm-modal');
+	const btnConfirmar = document.getElementById('delete-confirm-ok');
+	if (!modal) {
+		return;
+	}
+
+	acaoConfirmarRemocao = acaoConfirmar;
+	ultimoElementoComFocoConfirmacao = document.activeElement;
+	modal.classList.add('active');
+	modal.setAttribute('aria-hidden', 'false');
+
+	if (btnConfirmar instanceof HTMLElement) {
+		btnConfirmar.focus();
+	}
+}
+
+function fecharConfirmacaoRemocao() {
+	const modal = document.getElementById('delete-confirm-modal');
+	if (!modal) {
+		return;
+	}
+
+	modal.classList.remove('active');
+	modal.setAttribute('aria-hidden', 'true');
+	acaoConfirmarRemocao = null;
+
+	if (ultimoElementoComFocoConfirmacao instanceof HTMLElement) {
+		ultimoElementoComFocoConfirmacao.focus();
+	}
+}
+
+function renderizarGerenciarPerfis(nomePerfilAtivo) {
+	const lista = document.getElementById('manage-profiles-list');
+	if (!lista) {
+		return;
+	}
+
+	lista.innerHTML = '';
+	const perfis = obterPerfisCollection();
+
+	perfis.forEach((perfil) => {
+		const item = document.createElement('article');
+		item.className = 'manage-profile-item';
+		item.setAttribute('role', 'listitem');
+
+		const info = document.createElement('div');
+		info.className = 'manage-profile-info';
+
+		const avatar = document.createElement('img');
+		avatar.src = perfil.avatar || 'assets/capa1.avif';
+		avatar.alt = `Avatar do perfil ${perfil.nome}`;
+
+		const nomeWrapper = document.createElement('div');
+		const nome = document.createElement('span');
+		nome.className = 'manage-profile-name';
+		nome.textContent = perfil.nome;
+		nomeWrapper.appendChild(nome);
+
+		if (perfil.nome === nomePerfilAtivo) {
+			const badge = document.createElement('span');
+			badge.className = 'manage-profile-badge';
+			badge.textContent = 'Ativo';
+			nomeWrapper.appendChild(badge);
+		}
+
+		info.appendChild(avatar);
+		info.appendChild(nomeWrapper);
+
+		const removerBtn = document.createElement('button');
+		removerBtn.type = 'button';
+		removerBtn.className = 'manage-profile-delete';
+		removerBtn.textContent = 'Remover';
+		removerBtn.setAttribute('aria-label', `Remover perfil ${perfil.nome}`);
+		removerBtn.addEventListener('click', () => {
+			if (perfil.nome === nomePerfilAtivo) {
+				anunciarStatusAcessibilidade('Não é possível remover o perfil ativo no catálogo.');
+				return;
+			}
+
+			if (perfis.length <= 1) {
+				anunciarStatusAcessibilidade('É necessário manter ao menos um perfil.');
+				return;
+			}
+
+			abrirConfirmacaoRemocao(() => {
+				const resultado = deletarPerfil(perfil.nome, nomePerfilAtivo);
+				if (!resultado.sucesso) {
+					anunciarStatusAcessibilidade(resultado.mensagem || 'Não foi possível remover o perfil.');
+					return;
+				}
+
+				anunciarStatusAcessibilidade(`Perfil ${perfil.nome} removido.`);
+				mostrarNotificacao(`Perfil ${perfil.nome} removido.`);
+				renderizarGerenciarPerfis(nomePerfilAtivo);
+			});
+		});
+
+		item.appendChild(info);
+		item.appendChild(removerBtn);
+		lista.appendChild(item);
+	});
+}
+
+function abrirGerenciarPerfis(nomePerfilAtivo) {
+	const modal = document.getElementById('manage-profiles-modal');
+	const mainContent = document.getElementById('main-content');
+	if (!modal) {
+		return;
+	}
+
+	ultimoElementoComFocoGerenciar = document.activeElement;
+	renderizarGerenciarPerfis(nomePerfilAtivo);
+	modal.classList.add('active');
+	modal.setAttribute('aria-hidden', 'false');
+	document.body.style.overflow = 'hidden';
+	if (mainContent) {
+		mainContent.setAttribute('aria-hidden', 'true');
+	}
+
+	const btnVoltar = document.getElementById('manage-profiles-back');
+	if (btnVoltar instanceof HTMLElement) {
+		btnVoltar.focus();
+	}
+}
+
+function fecharGerenciarPerfis() {
+	const modal = document.getElementById('manage-profiles-modal');
+	const mainContent = document.getElementById('main-content');
+	if (!modal) {
+		return;
+	}
+
+	modal.classList.remove('active');
+	modal.setAttribute('aria-hidden', 'true');
+	document.body.style.overflow = '';
+	if (mainContent) {
+		mainContent.removeAttribute('aria-hidden');
+	}
+
+	if (ultimoElementoComFocoGerenciar instanceof HTMLElement) {
+		ultimoElementoComFocoGerenciar.focus();
+	}
+}
+
 function iniciarAcoesPerfil() {
 	const trocarPerfilLink = document.getElementById('trocar-perfil');
+	const gerenciarPerfisLink = document.getElementById('gerenciar-perfis');
 	const editarPerfilBtn = document.getElementById('editar-perfil');
 	const sairBtn = document.getElementById('sair');
 	const nomePerfilAtivo = obterPerfil()?.nome || 'Leticinha';
@@ -377,10 +545,72 @@ function iniciarAcoesPerfil() {
 		});
 	}
 
+	if (gerenciarPerfisLink) {
+		gerenciarPerfisLink.addEventListener('click', (event) => {
+			event.preventDefault();
+			abrirGerenciarPerfis(nomePerfilAtivo);
+		});
+	}
+
 	if (sairBtn) {
 		sairBtn.addEventListener('click', () => {
 			limparPerfil();
 			window.location.href = 'perfis.html';
+		});
+	}
+
+	const gerenciarModal = document.getElementById('manage-profiles-modal');
+	const confirmModal = document.getElementById('delete-confirm-modal');
+	if (gerenciarModal) {
+		const btnVoltar = document.getElementById('manage-profiles-back');
+
+		if (btnVoltar) {
+			btnVoltar.addEventListener('click', fecharGerenciarPerfis);
+		}
+
+		gerenciarModal.addEventListener('click', (e) => {
+			if (e.target === gerenciarModal) {
+				fecharGerenciarPerfis();
+			}
+		});
+
+		gerenciarModal.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				fecharGerenciarPerfis();
+			}
+		});
+	}
+
+	if (confirmModal) {
+		const btnCancelar = document.getElementById('delete-confirm-cancel');
+		const btnConfirmar = document.getElementById('delete-confirm-ok');
+
+		if (btnCancelar) {
+			btnCancelar.addEventListener('click', fecharConfirmacaoRemocao);
+		}
+
+		if (btnConfirmar) {
+			btnConfirmar.addEventListener('click', () => {
+				const confirmar = acaoConfirmarRemocao;
+				fecharConfirmacaoRemocao();
+				if (typeof confirmar === 'function') {
+					confirmar();
+				}
+			});
+		}
+
+		confirmModal.addEventListener('click', (e) => {
+			if (e.target === confirmModal) {
+				fecharConfirmacaoRemocao();
+			}
+		});
+
+		confirmModal.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				fecharConfirmacaoRemocao();
+			}
 		});
 	}
 
