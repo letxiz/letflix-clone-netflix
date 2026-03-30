@@ -2,7 +2,7 @@
 
 Projeto desenvolvido durante a **Imersão Front-End da Alura**, com o objetivo de recriar a interface da Netflix utilizando HTML, CSS e JavaScript.
 
-🔗 **[Ver demo ao vivo](https://letnoxs.github.io/LetFlix/)**
+🔗 **[Ver demo ao vivo](https://letxiz.github.io/letflix-clone-netflix/)**
 
 ---
 
