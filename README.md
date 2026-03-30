@@ -2,6 +2,8 @@
 
 Projeto desenvolvido durante a **Imersão Front-End da Alura**, com o objetivo de recriar a interface da Netflix utilizando HTML, CSS e JavaScript.
 
+🔗 **[Ver demo ao vivo](https://letnoxs.github.io/LetFlix/)**
+
 ---
 
 ## 🚀 Sobre o projeto
@@ -14,18 +16,17 @@ Cada perfil possui conteúdos diferentes, simulando uma experiência real de str
 
 ## ✨ Funcionalidades
 
-- 👤 **Seleção de perfis:** Escolha entre diferentes usuários.
-- 🧩 **Gerenciamento de perfis:** Acesso via dropdown para remover perfis.
-- 🎬 **Catálogo dinâmico:** Conteúdo personalizado por usuário.
-- 🎨 **Interface Fiel:** Design inspirado na UI original da Netflix.
-- 🔄 **Navegação:** Transição suave entre páginas.
-- 💾 **Persistência:** Uso de `localStorage` para salvar estados.
-- ✨ **Interatividade:** Efeitos de hover e animações fluidas.
-- 📱 **Responsividade:** Layout adaptável para diferentes dispositivos.
-- 🔍 **Busca integrada:** Busca em tempo real usando API TMDB.
-- 🎯 **Preferências por gênero:** Sistema de recomendação baseado em preferências do usuário.
-- ➕➖ **Minha Lista interativa:** Adição e remoção de filmes/séries com um clique.
-- 🛡️ **Fallback de imagem:** Cards exibem imagem padrão quando o carregamento falha.
+- 👤 **Seleção e criação de perfis:** Escolha entre perfis existentes ou crie um novo com nome e avatar.
+- 🧩 **Gerenciamento de perfis:** Adicione e remova perfis diretamente no catálogo, com confirmação visual em modal.
+- 🎬 **Intro animada:** Vídeo de abertura estilo Netflix ao entrar em um perfil, com botão "Pular intro" e controle por sessão.
+- 🎞️ **Catálogo dinâmico:** Conteúdo personalizado por perfil com filmes e séries separados por gênero.
+- 🔍 **Busca integrada:** Busca em tempo real usando a API TMDB.
+- 🎯 **Preferências por gênero:** Recomendações baseadas nos gêneros favoritos de cada perfil.
+- ➕➖ **Minha Lista interativa:** Adição e remoção de filmes/séries com feedback visual por notificação.
+- 🔔 **Notificações por perfil:** Painel com histórico de ações, badge em tempo real e opção de limpar.
+- 📱 **Responsividade:** Layout adaptável para desktop, tablet e mobile.
+- 💾 **Persistência:** `localStorage` para dados permanentes e `sessionStorage` para estado de sessão.
+- 🛡️ **Acessibilidade:** Skip links, regiões `aria-live`, foco gerenciado em modais e dropdowns, contraste e tamanhos de toque revisados.
 
 ---
 
@@ -61,8 +62,16 @@ Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida 
 │   ├── banner/
 │   ├── filmes/
 │   ├── generos/
-│   └── series/
+│   ├── series/
+│   ├── video/
+│   │   └── intro-Letflix.mp4
+│   ├── background.jpg
+│   ├── capa1.avif
+│   ├── capa3.jpg
+│   └── capa4.avif
 ├── css/
+│   ├── components/
+│   │   └── header.css
 │   ├── busca.css
 │   ├── catalogo.css
 │   └── perfis.css
@@ -83,23 +92,26 @@ Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida 
 │       └── perfis.js
 ├── busca.html
 ├── catalogo.html
+├── config.example.js
+├── config.js
 ├── index.html
 ├── perfis.html
 ├── README.md
 └── style.css
 ```
 
+---
+
 ## ✅ Atualizações recentes
 
-- Ajustes de UX mobile em **busca** e **catálogo** (header, campo de busca e espaçamentos).
-- Fluxo de **Gerenciar perfis** centralizado no dropdown com abertura em modo de gerenciamento.
-- Botão **Adicionar perfil** reposicionado para melhor experiência em mobile e desktop.
-- Limite de opções de avatar para novos perfis no mobile.
-- Correções de títulos e caminhos de imagens legadas na **Minha Lista**.
-- Suporte para **remover itens da Minha Lista** pelo mesmo botão de adicionar.
-- Tratamento de fallback para evitar card com imagem quebrada.
-- Correção no botão **Assistir agora** para evitar abertura duplicada: nova aba iniciada com `about:blank`, destino aplicado via `location.href` e fallback em `window.location.assign` quando necessário.
-- Correção no layout da **busca** quando houver apenas 1 resultado, evitando que o card/imagem fique gigante no desktop.
+- Correção no botão **Assistir agora** para evitar abertura duplicada de abas.
+- Correção no layout da busca com apenas 1 resultado (card gigante no desktop).
+- **Intro animada** ao selecionar perfil com botão "Pular intro", controle por sessão/perfil e transição suave para o catálogo.
+- **Gerenciar perfis** diretamente no catálogo sem recarregar a página, com modal de confirmação e toast de feedback.
+- **Notificações por perfil** com badge em tempo real, painel de histórico e botão para limpar.
+- **Header modularizado** em `css/components/header.css`.
+- **Botão "Voltar" mobile** na busca, alinhado à direita, com fallback para o catálogo.
+- **Auditoria de acessibilidade e responsividade:** 12 correções aplicadas (skip links, aria-live, foco em modais/dropdowns, tamanhos de toque, font-size mobile, entre outras).
 
 ---
 
@@ -109,7 +121,6 @@ O projeto está em evolução! Algumas melhorias planejadas incluem:
 
 - 🌙 **Modo Claro/Escuro:** Toggle entre tema dark (atual) e light mode
 - 📊 **Dashboard pessoal:** Histórico de visualizações e recomendações inteligentes
-- 🔔 **Notificações:** Alertas de novos lançamentos por gênero favorito
 - 🎬 **Reprodutor integrado:** Player nativo para conteúdo local
 - 💬 **Avaliações e reviews:** Sistema de comentários entre usuários
 - 🌐 **Mais integrações de API:** Suporte para outros provedores de dados
