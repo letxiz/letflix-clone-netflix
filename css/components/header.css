@@ -139,11 +139,12 @@
 	top: calc(100% + 0.6rem);
 	right: 0;
 	left: auto;
-	width: min(88vw, 21.25rem);
-	max-width: calc(100vw - 1rem);
+	width: clamp(16rem, 88vw, 21.25rem);
+	max-width: calc(100vw - 1rem - env(safe-area-inset-left) - env(safe-area-inset-right));
 	max-height: 18.75rem;
 	overflow: auto;
 	pointer-events: none;
+	box-sizing: border-box;
 	padding: 0.45rem;
 	border: 1px solid rgba(255, 255, 255, 0.12);
 	border-radius: 0.6rem;
@@ -439,11 +440,11 @@
 
 	.notifications-panel {
 		top: calc(100% + 0.55rem);
-		right: max(0.25rem, env(safe-area-inset-right));
+		right: 0;
 		left: auto;
-		width: min(92vw, 22rem);
-		max-width: calc(100vw - 0.75rem);
-		max-height: min(60vh, 22rem);
+		width: clamp(15rem, 92vw, 22rem);
+		max-width: calc(100vw - 0.75rem - env(safe-area-inset-left) - env(safe-area-inset-right));
+		max-height: min(58vh, 22rem);
 		box-sizing: border-box;
 		overflow-y: auto;
 		overflow-x: hidden;
@@ -571,10 +572,10 @@
 	}
 
 	.notifications-panel {
-		right: max(0.2rem, env(safe-area-inset-right));
+		right: 0;
 		left: auto;
-		width: min(95vw, 22rem);
-		max-width: calc(100vw - 0.4rem);
+		width: clamp(14rem, 94vw, 20.5rem);
+		max-width: calc(100vw - 0.5rem - env(safe-area-inset-left) - env(safe-area-inset-right));
 		padding: 0.55rem;
 		transform: translateY(-8px);
 	}
@@ -644,22 +645,3 @@
 	}
 }
 
-@media (max-width: 360px) {
-	.header-right {
-		position: relative;
-	}
-
-	.header-right .notifications {
-		position: static;
-	}
-
-	.header-right .notifications-panel {
-		top: calc(100% + 0.45rem);
-		left: 0;
-		right: 0;
-		width: auto;
-		max-width: none;
-		min-width: 0;
-		padding: 0.5rem;
-	}
-}
