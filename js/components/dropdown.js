@@ -72,7 +72,7 @@ export function iniciarDropdown() {
 	};
 
 	const atualizarNotificacoesUI = () => {
-		if (!notificationsList || !notificationsBadge) {
+		if (!notificationsBadge) {
 			return;
 		}
 
@@ -86,6 +86,10 @@ export function iniciarDropdown() {
 				'aria-label',
 				total > 0 ? `Abrir notificações. ${total} não lidas` : 'Abrir notificações. Nenhuma notificação'
 			);
+		}
+
+		if (!notificationsList) {
+			return;
 		}
 
 		notificationsList.innerHTML = '';
@@ -135,6 +139,8 @@ export function iniciarDropdown() {
 			catalogBody.classList.toggle('nav-open');
 		});
 	}
+
+	atualizarNotificacoesUI();
 
 	if (!perfilHeader || !perfilTrigger || !perfilDropdown) {
 		atualizarNotificacoesUI();

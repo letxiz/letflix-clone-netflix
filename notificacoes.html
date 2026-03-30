@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LETFLIX | Notificações</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="css/notificacoes.css">
+</head>
+<body class="notifications-page">
+	<a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
+	<div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+	<header class="notifications-header">
+		<a class="brand" href="catalogo.html" aria-label="Ir para a tela inicial">
+			<span class="logo-full">LETFLIX</span>
+			<span class="logo-mobile">L</span>
+		</a>
+		<button class="back-button" id="notifications-back" type="button" aria-label="Voltar para a página anterior">Voltar</button>
+	</header>
+
+	<main id="main-content" class="notifications-main">
+		<section class="notifications-card" aria-labelledby="notifications-title">
+			<div class="notifications-card__head">
+				<div>
+					<h1 id="notifications-title">Notificações</h1>
+					<p class="notifications-subtitle" id="notifications-subtitle">Seu histórico por perfil</p>
+				</div>
+				<button class="clear-button" id="notifications-page-clear" type="button">Limpar</button>
+			</div>
+
+			<ul class="notifications-page-list" id="notifications-page-list" aria-live="polite"></ul>
+		</section>
+	</main>
+
+	<script type="module" src="js/paginas/notificacoes.js"></script>
+</body>
+</html>
