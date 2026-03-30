@@ -11,6 +11,22 @@ export function iniciarDropdown() {
 	const notificationsBadge = document.getElementById('notifications-badge');
 	const notificationsClear = document.getElementById('notifications-clear');
 	const NOTIFICACOES_STORAGE_PREFIX = 'notificacoes_';
+	const NOTIFICATIONS_AUTO_CLOSE_MS = 3000;
+	let notificationsAutoCloseTimer = null;
+
+	const limparTimerNotificacoes = () => {
+		if (notificationsAutoCloseTimer !== null) {
+			window.clearTimeout(notificationsAutoCloseTimer);
+			notificationsAutoCloseTimer = null;
+		}
+	};
+
+	const iniciarTimerFechamentoNotificacoes = () => {
+		limparTimerNotificacoes();
+		notificationsAutoCloseTimer = window.setTimeout(() => {
+			closeNotificationsDropdown();
+		}, NOTIFICATIONS_AUTO_CLOSE_MS);
+	};
 
 	const obterNomePerfilAtivo = () => {
 		try {
@@ -104,6 +120,8 @@ export function iniciarDropdown() {
 			return;
 		}
 
+		limparTimerNotificacoes();
+
 		notifications.classList.remove('open');
 		notificationsTrigger.setAttribute('aria-expanded', 'false');
 		notificationsPanel.setAttribute('aria-hidden', 'true');
@@ -139,6 +157,38 @@ export function iniciarDropdown() {
 
 	if (notifications && notificationsTrigger && notificationsPanel) {
 		atualizarNotificacoesUI();
+
+		notificationsPanel.addEventListener('mouseenter', () => {
+			limparTimerNotificacoes();
+		});
+
+		notificationsPanel.addEventListener('mouseleave', () => {
+			if (notifications.classList.contains('open')) {
+				iniciarTimerFechamentoNotificacoes();
+			}
+		});
+
+		notificationsPanel.addEventListener('focusin', () => {
+			limparTimerNotificacoes();
+		});
+
+		notificationsPanel.addEventListener('focusout', (event) => {
+			const proximoFoco = event.relatedTarget;
+			if (notifications.classList.contains('open') && !(proximoFoco instanceof Node && notificationsPanel.contains(proximoFoco))) {
+				iniciarTimerFechamentoNotificacoes();
+			}
+		});
+
+		notificationsPanel.addEventListener('touchstart', () => {
+			limparTimerNotificacoes();
+		}, { passive: true });
+
+		notificationsPanel.addEventListener('touchend', () => {
+			if (notifications.classList.contains('open')) {
+				iniciarTimerFechamentoNotificacoes();
+			}
+		}, { passive: true });
+
 		notificationsTrigger.addEventListener('click', () => {
 			const isOpen = notifications.classList.toggle('open');
 
@@ -148,10 +198,13 @@ export function iniciarDropdown() {
 			if (isOpen) {
 				closeProfileDropdown();
 				atualizarNotificacoesUI();
+				iniciarTimerFechamentoNotificacoes();
 				const primeiroBotao = notificationsPanel.querySelector('button, [tabindex]');
 				if (primeiroBotao instanceof HTMLElement) {
 					primeiroBotao.focus();
 				}
+			} else {
+				limparTimerNotificacoes();
 			}
 		});
 
