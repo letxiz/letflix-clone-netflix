@@ -12,7 +12,8 @@
 }
 
 .profiles-page.is-leaving {
-	opacity: 0.5;
+	/* Reservado para fallback sem intro (redirect direto). */
+	opacity: 0;
 }
 
 .profiles-header {
@@ -47,7 +48,7 @@
 }
 
 .profiles-actions .manage-button {
-	min-width: 170px;
+	min-width: auto;
 	text-align: center;
 }
 
@@ -558,6 +559,100 @@
 	max-width: 460px;
 }
 
+/* =========================================
+   Intro LETFLIX
+   ========================================= */
+
+/* Overlay de tela cheia que cobre tudo durante a intro */
+#intro {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: #000;
+	z-index: 9999;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Fade-out suave ao encerrar a intro — adicionada via JS antes do redirect.
+   A div #intro permanece no DOM (display flex) durante a navegação para cobrir a
+   página de perfis com fundo preto até o catálogo terminar de carregar. */
+#intro.intro-fade-out {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+/* Desktop: prioriza exibir o quadro completo para não cortar o LETFLIX final. */
+#introVideo {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center center;
+	display: block;
+}
+
+/* Botão "Pular intro" — canto inferior direito, estilo Netflix */
+#pularIntro {
+	position: absolute;
+	bottom: clamp(1.5rem, 5vh, 3rem);
+	right: clamp(1rem, 4vw, 3rem);
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	border: 1px solid rgba(255, 255, 255, 0.55);
+	border-radius: 0.25rem;
+	padding: 0.5rem 1.4rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	cursor: pointer;
+	z-index: 1;
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#pularIntro:hover,
+#pularIntro:focus-visible {
+	background: rgba(255, 255, 255, 0.15);
+	border-color: #fff;
+	outline: none;
+}
+
+/* ── Responsividade da intro ──────────────────────────── */
+
+@media (max-width: 768px) {
+	/* Em mobile mantemos centralizado sem cortes para preservar o logo final */
+	#introVideo {
+		object-fit: contain;
+		object-position: center center;
+	}
+
+	#pularIntro {
+		font-size: 0.85rem;
+		padding: 0.45rem 1rem;
+	}
+}
+
+@media (max-width: 1024px) {
+	/* Tablet: evita recorte agressivo e mantém o LETFLIX centralizado no fim. */
+	#introVideo {
+		object-fit: contain;
+		object-position: center center;
+	}
+}
+
+@media (max-width: 480px) {
+	#pularIntro {
+		bottom: 1.25rem;
+		right: 0.75rem;
+		font-size: 0.8rem;
+		padding: 0.4rem 0.875rem;
+	}
+}
+
 @keyframes profile-appear {
 	to {
 		opacity: 1;
@@ -632,7 +727,7 @@
 	}
 
 	.profile-meta {
-		font-size: 0.73rem;
+		font-size: 0.75rem;
 	}
 
 	.manage-button {

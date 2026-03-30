@@ -11,7 +11,7 @@
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
-	width: 34px;
+	width: 44px;
 	height: 54px;
 	border: none;
 	border-radius: 999px;
@@ -64,6 +64,35 @@
 	font-size: 0.95rem;
 }
 
+.mobile-back-button {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	min-width: 5.4rem;
+	margin: 0 0 0.75rem auto;
+	padding: 0.48rem 0.92rem;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-radius: 999px;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+	backdrop-filter: blur(4px);
+	color: var(--color-text);
+	font-weight: 600;
+	font-size: 0.82rem;
+	letter-spacing: 0.02em;
+	box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+	cursor: pointer;
+	transition: transform var(--transition-default), background-color var(--transition-default), border-color var(--transition-default), box-shadow var(--transition-default);
+}
+
+.mobile-back-button:hover,
+.mobile-back-button:focus-visible {
+	transform: translateY(-1px);
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
+	border-color: rgba(255, 255, 255, 0.42);
+	box-shadow: 0 12px 22px rgba(0, 0, 0, 0.28);
+	outline: none;
+}
+
 /* Grid de resultados */
 .search-grid {
 	display: grid;
@@ -107,6 +136,14 @@
 }
 
 @media (max-width: 768px) {
+	.search-page-section .section-heading,
+	.search-page-section .section-heading h2,
+	#busca-title {
+		display: block;
+		visibility: visible;
+		opacity: 1;
+	}
+
 	.search-page .site-header__inner {
 		flex-wrap: wrap;
 		align-items: center;
@@ -120,14 +157,18 @@
 	.search-page .header-right {
 		width: 100%;
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-columns: minmax(0, 1fr) auto auto;
 		align-items: center;
 		gap: 0.5rem;
 		margin-left: 0;
 	}
 
 	.search-page-main {
-		padding-top: calc(var(--header-height) + 3.4rem);
+		padding-top: calc(var(--header-height) + 4.4rem);
+	}
+
+	.mobile-back-button {
+		display: flex;
 	}
 
 	.search-query {
@@ -163,12 +204,26 @@
 }
 
 @media (max-width: 480px) {
+	.search-page-section .section-heading,
+	.search-page-section .section-heading h2,
+	#busca-title {
+		display: block;
+		visibility: visible;
+		opacity: 1;
+	}
+
 	.search-page .header-right {
 		gap: 0.4rem;
 	}
 
 	.search-page-main {
-		padding-top: calc(var(--header-height) + 3.1rem);
+		padding-top: calc(var(--header-height) + 4rem);
+	}
+
+	.mobile-back-button {
+		margin-bottom: 0.65rem;
+		padding: 0.4rem 0.65rem;
+		font-size: 0.8rem;
 	}
 
 	.search-page .header-search,
