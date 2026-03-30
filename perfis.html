@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="css/perfis.css">
 </head>
 <body class="profiles-page">
-	<a class="skip-link" href="#main-content">Pular para o conteudo principal</a>
+	<a class="skip-link" href="#main-content">Pular para o conteúdo principal</a>
 	<div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 	<header class="profiles-header">
 		<div class="profiles-header-top">
@@ -53,8 +53,8 @@
 					</div>
 
 					<div class="modal-form-group">
-						<label id="avatar-grid-label">Escolha um Avatar</label>
-						<div class="avatar-grid" id="avatar-grid">
+					<p id="avatar-grid-label" class="modal-form-group__label">Escolha um Avatar</p>
+					<div class="avatar-grid" id="avatar-grid" aria-labelledby="avatar-grid-label">
 							<!-- Avatares serão renderizados aqui via JS -->
 						</div>
 					</div>
@@ -88,6 +88,20 @@
 				<button class="modal-btn-confirm" id="pref-confirm-btn" type="button">Salvar e Entrar</button>
 			</div>
 		</div>
+	</div>
+
+	<!-- ── Overlay de intro LETFLIX ──────────────────────────────────────
+	     Exibido ao clicar em um perfil. O vídeo é acelerado via JS
+	     para durar ~4s em vez dos ~11s originais.
+	     O botão "Pular intro" permite ignorar o vídeo imediatamente.
+	──────────────────────────────────────────────────────────────── -->
+	<div id="intro" role="dialog" aria-modal="true" aria-label="Intro LETFLIX" aria-hidden="true" style="display:none;">
+		<video id="introVideo" playsinline preload="auto" aria-hidden="true">
+			<source src="assets/video/intro-Letflix.mp4" type="video/mp4">
+		</video>
+		<button id="pularIntro" type="button" aria-label="Pular a intro e entrar no catálogo">
+			Pular intro
+		</button>
 	</div>
 
 	<script type="module" src="js/paginas/perfis.js"></script>
