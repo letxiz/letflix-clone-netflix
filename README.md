@@ -107,8 +107,10 @@ Para manter compatibilidade com o **GitHub Pages**, a chave da API foi definida 
 - Correção no botão **Assistir agora** para evitar abertura duplicada de abas.
 - Correção no layout da busca com apenas 1 resultado (card gigante no desktop).
 - **Intro animada** ao selecionar perfil com botão "Pular intro", controle por sessão/perfil e transição suave para o catálogo.
+- **Botão "Pular intro" no mobile** centralizado horizontalmente, com largura adaptativa e ajuste para safe area em celulares.
 - **Gerenciar perfis** diretamente no catálogo sem recarregar a página, com modal de confirmação e toast de feedback.
 - **Notificações por perfil** com badge em tempo real, painel de histórico e botão para limpar.
+- **Correção de responsividade da tela de perfis em mobile:** removido fallback agressivo em `max-width: 360px` que forçava 1 coluna em aparelhos como Galaxy S8+; grid ajustado para 2 colunas fluidas na maioria dos celulares e 1 coluna apenas em telas muito estreitas.
 - **Header modularizado** em `css/components/header.css`.
 - **Botão "Voltar" mobile** na busca, alinhado à direita, com fallback para o catálogo.
 - **Auditoria de acessibilidade e responsividade:** 12 correções aplicadas (skip links, aria-live, foco em modais/dropdowns, tamanhos de toque, font-size mobile, entre outras).
